@@ -1,42 +1,21 @@
 const { writable, derived } = require('svelte/store');
-const { clone } = require('./utils/others');
-const { DATA, COMMON_DATA, STATE_DATA } = require('./constants');
+const { IV_DATA, STATE_DATA } = require('./constants');
 const { ipcRenderer } = require('electron');
 
-const initialData = clone(DATA);
+const initialIV = Object.assign({}, ...IV_DATA.map(key => ({ [key]: 0 })));
+const initialState = Object.assign(
+  {},
+  ...STATE_DATA.map(key => ({ [key]: 0 }))
+);
 
-for (let key in initialData) initialData[key].value = 0;
-for (let key in STATE_DATA) initialData[key] = 0;
-for (let pos of [1, 2]) {
-  initialData['power' + pos] = {
-    symbol: 'P',
-    units: 'Вт',
-    value:
-      initialData['current' + pos].value * initialData['voltage' + pos].value,
-  };
-}
+initialState.charge1 = 50;
 
-const data = writable(initialData);
-const connectionType = writable();
+const IVData = writable(initialIV);
+const stateData = writable(initialState);
 
-const summed = ['current', 'voltage', 'power', 'consumption'];
-
-const commonData = derived(data, $data => {
-  const d = {};
-  for (const key in COMMON_DATA) d[key] = { ...$data[key] };
-  for (let i = 0; i < summed.length; ++i) {
-    const key = summed[i];
-    d[key] = { ...$data[key + 1] };
-    d[key].value = +($data[key + 1].value + $data[key + 2].value).toPrecision(4);
-    d[key].symbol = d[key].symbol + '<sub>&#x2211;</sub>';
-  }
-  return d;
-});
-
-ipcRenderer.on('serialData', (e, d) => data.set(d));
+ipcRenderer.on('serialData', (e, d) => {});
 
 module.exports = {
-  data,
-  connectionType,
-  commonData,
+  IVData,
+  stateData,
 };

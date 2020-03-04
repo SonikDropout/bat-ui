@@ -3,7 +3,7 @@
   import ResearchSelect from './layouts/ResearchSelect';
   import BatteryResearch from './layouts/BatteryResearch';
   import EnergyResearch from './layouts/EnergyResearch';
-  let state = STATES.initial;
+  let state = STATES.battery;
 
   function selectResearch(e) {
     state = e.target.value;

@@ -11,7 +11,7 @@ let win, usbPath;
 const mode = process.env.NODE_ENV;
 
 function reloadOnChange(win) {
-  if (mode !== 'development') return { close: () => {} };
+  if (mode !== 'development' && mode !== 'test') return { close: () => {} };
 
   const watcher = require('chokidar').watch(path.join(__dirname, 'dist', '**'), {
     ignoreInitial: true,

@@ -1,45 +1,24 @@
 <script>
-  export let dir = 'both';
+  export let direction = 'inout';
+  export let style;
 </script>
 
-<div class="arrow-wrapper">
-  <div class="arrow {dir}"></div>
+<div class="arrow" {style}>
+{#if (/in/).test( direction)}
+  &uarr;
+{/if}
+{#if (/out/).test( direction)}
+  &darr;
+{/if}
 </div>
 
 <style>
-  .arrow-wrapper {
+  .arrow {
     height: 24px;
     display: flex;
-  }
-  .arrow.both {
-    width: 24px;
-  }
-  .arrow.both,
-  .arrow.up {
-    border-left: 2px solid var(--text-color);
-  }
-  .arrow.both,
-  .arrow.down {
-    border-right: 2px solid var(--text-color);
-  }
-  .arrow.both::before,
-  .arrow.up::before {
-    content: '';
-    display: block;
-    position: relative;
-    left: -50%;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-bottom: 10px solid var(--text-color);
-  }
-  .arrow.both::after,
-  .arrow.up::after {
-    content: '';
-    display: block;
-    position: relative;
-    left: 50%;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 10px solid var(--text-color);
+    text-align: center;
+    font-size: 24px;
+    line-height: 1;
+    font-family: Arial sans-serif;
   }
 </style>

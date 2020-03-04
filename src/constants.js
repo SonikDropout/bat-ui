@@ -20,7 +20,9 @@ const IV_DATA = [
     'currentIn' + (i + 1),
     'currentOut' + (i + 1),
   ]),
-  'current6'
+  'current6',
+  'temp1',
+  'temp2',
 ].flat(2);
 
 const STATE_DATA = [
@@ -36,7 +38,9 @@ const STATE_DATA = [
   'onoff6',
   'mode6',
   'offMode6',
-]
+  'charge1',
+  'charge2',
+];
 
 const COMMANDS = {
   turnOff: 4,
@@ -64,24 +68,23 @@ const COMMANDS = {
 };
 
 const BATTERY_TYPES = [
-  '-- не подключено --',
+  'Не подключено',
   'LiPo',
   'LiFe',
   'NiMh',
   'NiCd',
   'PbO',
-  'C',
-]
+  'Суперконденсатор',
+];
 
 const CONSTRAINTS = {
   voltage: [],
-  current: []
-}
+  current: [],
+};
 
-const MODES = [
-  {symbol: 'I, A'},
-  {symbol: 'U, B'},
-]
+const MODES = [{ symbol: 'I, A' }, { symbol: 'U, B' }];
+
+const OFF_MODES = ['по напряжению', 'по времени'];
 
 module.exports = {
   IS_RPI,
@@ -94,5 +97,5 @@ module.exports = {
   BATTERY_TYPES,
   CONSTRAINTS,
   MODES,
-  OFF_MODES
+  OFF_MODES,
 };

@@ -1,8 +1,13 @@
 <script>
   export let className;
   export let disabled;
+  export let style;
   export let name;
 </script>
+
+<button {style} {disabled} class={className} {name} on:click>
+  <slot />
+</button>
 
 <style>
   button {
@@ -33,7 +38,3 @@
     font-size: 1.8rem;
   }
 </style>
-
-<button {disabled} class={className} {name} on:click>
-  <slot />
-</button>

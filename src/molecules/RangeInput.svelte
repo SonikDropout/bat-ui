@@ -3,21 +3,24 @@
   export let disabled;
   export let onChange;
   export let name;
+  export let defaultValue = range[0];
+  export let type;
+  export let style;
 
-  let step = 1;
+  let step = 10;
 
   $: min = Math.min.apply(null, range);
   $: max = Math.max.apply(null, range);
   $: diff = max - min;
-  $: value = range[0];
+  $: value = Math.min(Math.max(defaultValue, range[0]), range[1]);
 
   $: {
-    if (diff < 1) step = 0.01;
+    if (diff < 100) step = 1;
     if (diff < 10) step = 0.1;
+    if (diff < 1) step = 0.01;
   }
 
-  let input = { value: range[0] },
-    timeout,
+  let timeout,
     interval,
     showControls = false;
 
@@ -41,20 +44,41 @@
     }, 500);
   }
 
-  function pressIncrement() {
+  function pressIncrement(e) {
     stickyCall(increment);
+    e.target.setPointerCapture(e.pointerId);
   }
 
-  function pressDecrement() {
+  function pressDecrement(e) {
     stickyCall(decrement);
+    e.target.setPointerCapture(e.pointerId);
   }
 
-  function release() {
+  function release(e) {
     if (timeout) clearTimeout(timeout);
     if (interval) clearInterval(interval);
+    e.target.releasePointerCapture(e.pointerId);
     onChange(value, name);
   }
 </script>
+
+<span class="input-wrapper {type}" {style} class:disabled>
+  <button
+    disabled={value <= min || disabled}
+    class="decrementer"
+    on:pointerdown={pressDecrement}
+    on:pointerup={release}>
+    <span>-</span>
+  </button>
+  <span class="input">{value}</span>
+  <button
+    disabled={value >= max || disabled}
+    class="incrementer"
+    on:pointerdown={pressIncrement}
+    on:pointerup={release}>
+    <span>+</span>
+  </button>
+</span>
 
 <style>
   .input-wrapper {
@@ -65,9 +89,19 @@
     line-height: 3.2rem;
     display: flex;
     overflow: hidden;
+    max-width: 100%;
   }
   .input-wrapper.disabled {
     opacity: 0.6;
+  }
+  .naked,
+  .naked > * {
+    border: none;
+    background-color: transparent;
+    color: inherit;
+  }
+  .naked {
+    width: 12rem;
   }
   .input {
     flex-grow: 1;
@@ -95,21 +129,3 @@
     opacity: 0.5;
   }
 </style>
-
-<span class="input-wrapper" class:disabled>
-  <button
-    disabled={value <= min || disabled}
-    class="decrementer"
-    on:pointerdown={pressDecrement}
-    on:pointerup={release}>
-    <span>-</span>
-  </button>
-  <span class="input">{value}</span>
-  <button
-    disabled={value >= max || disabled}
-    class="incrementer"
-    on:pointerdown={pressIncrement}
-    on:pointerup={release}>
-    <span>+</span>
-  </button>
-</span>

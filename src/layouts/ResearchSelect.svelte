@@ -7,14 +7,14 @@
 
 <main>
   <label class="area" transition:slideLeft>
-    <img src="../static/icons/energy.svg" alt="temperature" />
+    <img src="../static/icons/energy.svg" alt="energy" />
     <p>Исследование по преобразованию и коммутации энергии</p>
-    <input type="radio" name="appState" value={STATES.energy} on:change />
+    <input type="radio" class="hidden" name="appState" value={STATES.energy} on:change />
   </label>
   <label class="area" transition:slideRight>
-    <img src="../static/icons/battery.svg" alt="temperature" />
+    <img src="../static/icons/battery.svg" alt="battery" class="bat-icon"/>
     <p>Исследовани основных характеристик аккумуляторных батарей</p>
-    <input type="radio" name="appState" value={STATES.battery} on:change />
+    <input type="radio" class="hidden" name="appState" value={STATES.battery} on:change />
   </label>
 </main>
 
@@ -22,17 +22,7 @@
   main {
     width: 100vw;
     height: 100vh;
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-column-gap: 24px;
-    padding: 0 24px;
     align-items: center;
-  }
-  input {
-    position: absolute;
-    top: -9999px;
-    left: -9999px;
-    visibility: hidden;
   }
   label {
     font-size: 2.4rem;
@@ -41,10 +31,10 @@
     color: var(--bg-color);
     text-align: center;
     border-radius: 12px;
-    padding: 3.2rem 8rem;
+    padding: 3.2rem 4rem;
   }
   label img {
-    width: 60%;
+    height: 120px;
     display: block;
     margin: 0 auto;
   }
@@ -55,5 +45,8 @@
   .area:last-child {
     grid-column: 8 / 12;
     background-color: var(--corporate-blue);
+  }
+  img.bat-icon {
+    filter: brightness(100);
   }
 </style>

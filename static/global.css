@@ -4,7 +4,7 @@
   --corporate-orange: #f07e0f;
   --corporate-blue: #1aa2dd;
   --corporate-emerald: #37abb8;
-  --corporate-emerald-darken: #1C5B57;
+  --corporate-emerald-darken: #1c5b57;
   --corporate-light-green: #8bc041;
   --corporate-blue-darken: #065b8c;
   --danger-color: #dc3545;
@@ -43,6 +43,7 @@ header {
   padding: 0;
   height: 6.4rem;
   line-height: 6.4rem;
+  font-family: 'Oswald', Arial, Helvetica, sans-serif;
 }
 
 .layout {
@@ -56,4 +57,36 @@ header {
 
 .layout main {
   flex-grow: 2;
+}
+
+main {
+  display: grid;
+  grid-template-columns: repeat(12, 60px);
+  grid-column-gap: 24px;
+  padding: 0 24px;
+}
+
+.hidden {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  visibility: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Oswald';
+  text-align: center;
+  font-weight: 400;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 300;
 }
