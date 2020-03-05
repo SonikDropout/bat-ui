@@ -42,17 +42,17 @@
           style="grid-area: bat-{num}"
           temperature={$IVData['temp' + num]}
           charge={$stateData['charge' + num]}
-          type={BATTERY_TYPES[$stateData['type' + num]]}
+          type={$stateData['type' + num]}
           voltage={$IVData['voltage' + num]}
           current={$IVData['currentIn' + num]} />
         <Switch
-          on="заряд"
-          off="разряд"
+          on="вкл"
+          off="выкл"
           on:change={switchModes}
           style="grid-area: sw-{num}" />
         <Switch
-          on="вкл"
-          off="выкл"
+          on="заряд"
+          off="разряд"
           on:change={switchModes}
           style="grid-area: sw-2-{num}" />
       {:else if type == 'input'}
@@ -75,13 +75,21 @@
           style="grid-area: sw-{num}" />
       {:else if type == 'output'}
         <div class="set-voltage" style="grid-area: v-{num}">
-          Задать напряжение <br> 12-24В
+          Задать напряжение
+          <br />
+          12-24В
           <RangeInput
-            style="margin: 0 auto"  
+            style="margin: 0 auto"
             type="naked"
             range={[12, 24]}
             onChange={setOutputVoltage} />
         </div>
+        <Arrow direction="output" style="grid-area: v-5; align-self: end;" />
+        <img
+          class="lamp"
+          style="grid-area: ico-5"
+          src="../static/icons/lamp.svg"
+          alt="lamp" />
         <Switch
           on="вкл"
           off="выкл"
@@ -89,13 +97,13 @@
           style="grid-area: sw-{num}" />
       {/if}
     {/each}
-    <div class="input-iv" style="gird-area: iv-6">
+    <div class="input-iv" style="grid-area: iv-6">
       <div>U, B = {$IVData.voltage6}</div>
       <div>I, A = {$IVData.current6}</div>
     </div>
-    <Arrow direction="output" style="grid-area: iv-6" />
+    <Arrow direction="input" style="grid-area: ico-6" />
     <img
-      class="icon"
+      class="fruit"
       alt="fruit"
       src="../static/icons/fruit.svg"
       style="grid-area: ico-6" />
@@ -104,10 +112,8 @@
       off="выкл"
       on:change={switchModes}
       style="grid-area: sw-6" />
+    <Button on:click={onBack} style="grid-area:back">Назад</Button>
   </main>
-  <footer>
-    <Button on:click={onBack}>Назад</Button>
-  </footer>
 </div>
 
 <style>
@@ -121,9 +127,14 @@
       'dc-1 dc-2 dc-3 dc-4 dc-5 .'
       'ar-3-1 ar-3-2 ar-3-3 ar-3-4 ar-3-5 .'
       'bat-1 bat-2 iv-3 iv-4 v-5 iv-6'
-      'bat-1 bat-2 ico-3 ico-4 ico-5 ico-6'
-      'sw-1 sw-2 sw-3 sw-4 ico-5 ico-6'
-      'sw-2-1 sw-2-2 . . sw-5 sw-6';
+      'bat-1 bat-2 . . v-5 ico-6'
+      '. . ico-3 ico-4 ico-5 ico-6'
+      'sw-1 sw-2 sw-3 sw-4 ico-5 sw-6'
+      'sw-2-1 sw-2-2 . . sw-5 back';
+    grid-template-rows: 3.2rem 24px 3.2rem 24px 6.4rem 24px repeat(3, 6.4rem) repeat(
+        2,
+        4rem
+      );
     justify-items: center;
     align-items: start;
   }
@@ -141,16 +152,31 @@
     border-radius: 4px;
     justify-self: stretch;
   }
-  .current {
-    height: 30px;
-    line-height: 30px;
+  .current,
+  .input-iv {
+    font-weight: 700;
     text-align: center;
+  }
+  .current {
+    height: 3.2rem;
+    line-height: 3.2rem;
+  }
+  .input-iv {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
   }
   .input-icons img {
     height: 3.2rem;
   }
-  .icon {
-    height: 6rem;
+  .fruit {
+    height: 6.4rem;
+    align-self: center;
+  }
+  .lamp {
+    height: 6.4rem;
+    align-self: center;
   }
   .set-voltage {
     text-align: center;

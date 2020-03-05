@@ -1,6 +1,8 @@
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 
 const mode = process.env.NODE_ENV || 'development';
+const prod = mode === 'production';
 
 module.exports = {
   entry: './src/renderer.js',
@@ -30,7 +32,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        use: [prod ? MiniCssExtractPlugin.loader : 'style-loader', 'css-loader'],
       },
     ],
   },
@@ -46,5 +48,10 @@ module.exports = {
       callback();
     },
   ],
+  plugins: [
+		new MiniCssExtractPlugin({
+			filename: '[name].css'
+		})
+	],
   mode,
 };

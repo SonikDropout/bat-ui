@@ -4,6 +4,7 @@
   export let options;
   export let disabled;
   export let defaultValue;
+  export let title;
   export let order = 0;
   export let style;
 
@@ -46,6 +47,7 @@
 
 <div class="select-wrapper" {style}> 
   <div
+    {title}
     class="select"
     style="z-index:{100 - order}"
     bind:this={select}

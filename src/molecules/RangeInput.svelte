@@ -6,19 +6,11 @@
   export let defaultValue = range[0];
   export let type;
   export let style;
-
-  let step = 10;
+  export let step = 1;
 
   $: min = Math.min.apply(null, range);
   $: max = Math.max.apply(null, range);
-  $: diff = max - min;
   $: value = Math.min(Math.max(defaultValue, range[0]), range[1]);
-
-  $: {
-    if (diff < 100) step = 1;
-    if (diff < 10) step = 0.1;
-    if (diff < 1) step = 0.01;
-  }
 
   let timeout,
     interval,

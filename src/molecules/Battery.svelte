@@ -1,4 +1,5 @@
 <script>
+  import {BATTERY_TYPES} from '../constants';
   export let current;
   export let voltage;
   export let type;
@@ -15,10 +16,14 @@
     100%)">
     <div class="chars" style="background-image:linear-gradient(to bottom, #333 0 {100-charge}%, white {100-charge}%
     100%)">
-      U, B = {voltage} <br>
-      I, A = {current} <br>
-      {type} <br>
-      T, &deg;C = {temperature} <br>
+    {#if type}
+      <span>U, B = {voltage} </span>
+      <span>I, A = {current} </span>
+      <span>{BATTERY_TYPES[type]} </span>
+      <span>T, &deg;C = {temperature}</span>
+    {:else}
+    <img src="../static/icons/cross.svg" alt="cross"><span class="noop">н/д</span>
+    {/if}
     </div>
   </div>
 </div>
@@ -29,12 +34,18 @@
     background-clip: text;
     -webkit-text-fill-color: transparent;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    font-weight: bold;
   }
   .battery {
     border: 2px solid var(--text-color);
     border-radius: 4px;
     width: 9rem;
     height: 12rem;
+    padding: 1rem 0.4rem;
+    position: relative;
   }
   .tip {
     margin: 0 auto;
@@ -43,5 +54,18 @@
     border-bottom: none;
     width: 24px;
     height: 8px;
+  }
+  span {
+    white-space: nowrap;
+    display: block;
+  }
+  span.noop {
+    text-align: center;
+  }
+  img {
+    position: absolute;
+    bottom: -1rem;
+    right: -1rem;
+    height: 5rem;
   }
 </style>

@@ -11,6 +11,7 @@ module.exports = function config(points, axesLabels) {
       ]
     },
     options: {
+      responsive: false,
       elements: {
         point: {
           radius: 1

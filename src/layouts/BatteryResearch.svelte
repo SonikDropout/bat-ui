@@ -20,7 +20,10 @@
   onMount(() => {
     chart = new Chart(
       document.getElementById('chart').getContext('2d'),
-      configureChart(points, { x: '', y: '' })
+      configureChart(points, {
+        x: 't, c',
+        y: OFF_MODES[Math.abs(selectedMode - 2)] || 'I, A',
+      })
     );
     chart.options.onClick = chart.resetZoom;
   });
@@ -30,7 +33,7 @@
   ipcRenderer.on('usbDisconnected', () => (saveDisabled = true));
 
   const modeOptions = [
-    { label: '-- выберете режим --', value: 0 },
+    { label: 'режим не выбран', value: 0 },
     { label: 'по постоянному току', value: 1 },
     { label: 'по постоянному напряжению', value: 2 },
   ];
@@ -47,19 +50,36 @@
     isDrawing,
     unsubscribeData,
     chart,
+    chargeCapacity = 0,
+    energyCapacity = 0,
+    modeConstraint,
     timeStart;
 
-  $: startDisabled = !selectedMode.value || !selectedType.value;
+  $: if (selectedMode == 1)
+    modeConstraint = CONSTRAINTS.batVoltage[$stateData.type1];
+  $: if (selectedMode == 2) modeConstraint = CONSTRAINTS.batCurrent;
 
-  function toggleDrawing() {
+  $: startDisabled = !$stateData.type1 || !selectedMode.value;
+
+  function toggleResearch() {
     if (isDrawing) {
-      unsubscribeData();
-      stopDrawing();
+      stopResearch();
     } else {
-      startLogging();
-      subscribeData();
+      startResearch();
     }
     isDrawing = !isDrawing;
+  }
+
+  function stopResearch() {
+    unsubscribeData();
+    stopDrawing();
+    ipcRenderer.send('serialCommand', COMMANDS.turnOff6);
+  }
+
+  function startResearch() {
+    startLogging();
+    subscribeData();
+    ipcRenderer.send('serialCommand', COMMANDS.turnOn6);
   }
 
   function startLogging() {
@@ -70,15 +90,39 @@
 
   function stopDrawing() {
     points = [];
+    chargeCapacity = 0;
+    energyCapacity = 0;
   }
 
   function subscribeData() {
     timeStart = Date.now();
-    unsubscribeData = commonData.subscirbe(d => {
-      const row = { x: 0, y: 0 };
-      sendToLogger(Object.values(row));
-      updateChart(row);
-    });
+    const unsubscribeIV = IVData.subscirbe(getPoint);
+    const unsubscribeState = stateData.subscribe(monitorStop);
+    unsubscribeData = () => {
+      unsubscribeIV();
+      unsubscribeState();
+    };
+  }
+
+  function monitorStop(state) {
+    if (!state.startStop) {
+      stopResearch();
+    }
+  }
+
+  function getPoint(data) {
+    const row = {
+      x: (Date.now() - timeStart) / 1000,
+      y: data[data.mode6 > 1 ? 'current6' : 'voltage6'],
+    };
+    addCapacity(data.current6, data.voltage6);
+    sendToLogger(Object.values(row));
+    updateChart(row);
+  }
+
+  function sumCapacity(I, V) {
+    chargeCapacity += I / 3600;
+    energyCapacity += (I * V) / 3600;
   }
 
   function updateChart(p) {
@@ -120,74 +164,123 @@
   <header>Исследование основных характеристик аккумуляторных батарей</header>
   <main>
     <div class="label">Исследуемый тип АКБ</div>
-    <div class="bat-type">
-      {BATTERY_TYPES[$stateData.type1 || $stateData.type2]}
-    </div>
+    <h3>{BATTERY_TYPES[$stateData.type1]}</h3>
     <div class="label">Режим исследования</div>
     <Select
+      title={!$stateData.type1 ? 'Подключите батарею чтобы выбрать режим исследования' : ''}
+      disabled={!$stateData.type1}
       style="grid-column: 1/ 5"
       options={modeOptions}
       defaultValue={selectedMode}
       onChange={selectMode} />
     {#if selectedMode}
-      <div class="label-inline">{MODES[selectedMode].symbol}</div>
+      <div class="label-inline">{MODES[selectedMode - 1].symbol}</div>
       <RangeInput
+        step={0.1}
         style="grid-column: 2 / 4"
         onChange={setIV}
-        range={CONSTRAINTS} />
+        range={modeConstraint} />
+    {:else}
+      <div class="spacer" />
     {/if}
     <div class="label">Выставить ограничения</div>
     <Select
+      order={2}
       style="grid-column: 1 / 4"
       onChange={setOffMode}
       options={constraintOptions}
       defaultValue={selectedConstraint} />
-    <div class="label-inline">{[selectedConstraint]}</div>
+    <div class="label-inline">{OFF_MODES[selectedConstraint]}</div>
     <RangeInput
       style="grid-column: 2 / 4"
       onChange={setConstraint}
-      range={CONSTRAINTS} />
-    <Button style="grid-column: 1 / 3" id="onoff" on:click={toggleDrawing}>
+      step={selectedConstraint ? 10 : 0.1}
+      range={CONSTRAINTS[selectedConstraint ? 'offTime' : 'offVoltage']} />
+    <Button
+      style="grid-column: 1 / 3; align-self: start"
+      id="onoff"
+      on:click={toggleResearch}>
       {isDrawing ? 'Стоп' : 'Старт'}
     </Button>
-    <h3>Полученные характеристики</h3>
+    <h4>Полученные характеристики</h4>
     <div class="char-label">U, B</div>
     <div class="char-value">{$IVData.voltage2}</div>
-    <div class="char-label">I, A</div>
-    <div class="char-value">{$IVData.current2}</div>
     <div class="char-label second">Q, мА*c</div>
-    <div class="char-label second">E, мВт*с</div>
-    <div class="chart">
-      <canvas id="chart" height="400" width="520" />
+    <div class="char-value second">
+      {chargeCapacity > 0.001 ? chargeCapacity.toPrecision(3) : 0}
     </div>
-    <Button on:click={onBack} style="grid-column: 5 / 7" id="back">Назад</Button>
-    <Button on:click={saveFile} id="save" style="grid-column: 7 / 13" disabled={saveDisabled}>
+    <div class="char-label">I, A</div>
+    <div class="char-value">{$IVData.currentIn2}</div>
+    <div class="char-label second">E, мВт*с</div>
+    <div class="char-value second">
+      {energyCapacity > 0.001 ? energyCapacity.toPrecision(3) : 0}
+    </div>
+    <div class="chart">
+      <canvas id="chart" height="400" width="640" />
+    </div>
+    <Button
+      on:click={onBack}
+      style="grid-area: 11 / 5 / 13 / 7; align-self: end"
+      id="back">
+      Назад
+    </Button>
+    <Button
+      on:click={saveFile}
+      id="save"
+      style="grid-area: 11 / 7 / 13 / 13; align-self: end"
+      disabled={saveDisabled}>
       Запись данных на usb-устройство
     </Button>
   </main>
 </div>
 
 <style>
-  .label {
+  main {
+    grid-template-rows: repeat(8, 3.2rem) repeat(2, 5rem) repeat(2, 3.2rem);
+    grid-row-gap: 8px;
+    line-height: 1;
+  }
+  .label,
+  h4,
+  h3,
+  .spacer {
     grid-column: 1 / 5;
+  }
+  h3 {
+    text-align: left;
+  }
+  .label {
+    align-self: end;
   }
   .label-inline {
     grid-column: 1 / 2;
-  }
-  h3 {
-    grid-column: 1 / 5;
+    align-self: center;
   }
   .char-label {
     grid-column: 1 / 2;
+    white-space: nowrap;
   }
   .char-value {
+    white-space: nowrap;
     grid-column: 2 / 3;
+  }
+  h4,
+  .char-label,
+  .char-value {
+    align-self: end;
+  }
+  .char-value {
+    font-weight: bold;
   }
   .char-label.second {
     grid-column: 3 / 4;
   }
+  .char-value.second {
+    grid-column: 4 / 5;
+  }
   .chart {
+    align-self: end;
     grid-column: 5 / 13;
-    grid-row: 1 / 10;
+    grid-row: 1 / 11;
   }
 </style>

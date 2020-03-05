@@ -7,7 +7,7 @@ const serial = new Serial(PORT.name, { baudRate: PORT.baudRate });
 serial.on('data', handleData);
 
 let subscribers = [];
-const buffer = Buffer.alloc(50);
+const buffer = Buffer.alloc(58);
 let offset = 0;
 
 function handleData(buf) {
@@ -36,9 +36,8 @@ function subscribe(fn) {
 let commandQueue = [];
 let portBusy = false;
 
-function sendCommand(bytes) {
-  let [byte1, byte2] = isNaN(bytes) ? bytes : [bytes, 0];
-  commandQueue.push(Buffer.from([30, byte1, byte2, byte1 + byte2 + 30]));
+function sendCommand([byte1, byte2]) {
+  commandQueue.push(Buffer.from([20, byte1, byte2, byte1 + byte2 + 20]));
   if (!portBusy) {
     portBusy = true;
     writeCommandFromQueue();

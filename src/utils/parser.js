@@ -16,5 +16,5 @@ module.exports = function parse(buf) {
   for (let j = 0; j < STATE_DATA.length; j++) {
     result.state.push(buf[i++]);
   }
-  return data;
+  return result;
 };

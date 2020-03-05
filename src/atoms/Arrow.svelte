@@ -17,7 +17,7 @@
     height: 24px;
     display: flex;
     text-align: center;
-    font-size: 24px;
+    font-size: 20px;
     line-height: 1;
     font-family: Arial sans-serif;
   }

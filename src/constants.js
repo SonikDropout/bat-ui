@@ -35,31 +35,29 @@ const STATE_DATA = [
   'onoff3',
   'onoff4',
   'onoff5',
-  'onoff6',
+  'startStop6',
   'mode6',
   'offMode6',
-  'charge1',
-  'charge2',
 ];
 
 const COMMANDS = {
-  turnOff: 4,
-  turnOn1: 8,
-  turnOff1: 12,
-  charge1: 16,
-  discharge1: 20,
-  turnOn2: 24,
-  turnOff2: 28,
-  charge2: 32,
-  discharge2: 36,
-  turnOn3: 40,
-  turnOff3: 44,
-  turnOn4: 48,
-  turnOff4: 52,
-  turnOn5: 56,
-  turnOff5: 60,
-  turnOn6: 64,
-  turnOff6: 68,
+  turnOff: [4, 0],
+  turnOn1: [8, 0],
+  turnOff1: [12, 0],
+  charge1: [16, 0],
+  discharge1: [20, 0],
+  turnOn2: [24, 0],
+  turnOff2: [28, 0],
+  charge2: [32, 0],
+  discharge2: [36, 0],
+  turnOn3: [40, 0],
+  turnOff3: [44, 0],
+  turnOn4: [48, 0],
+  turnOff4: [52, 0],
+  turnOn5: [56, 0],
+  turnOff5: [60, 0],
+  turnOn6: [64, 0],
+  turnOff6: [68, 0],
   setCurrent6: v => [72, 100 + v * 10],
   setVoltage6: v => [76, 100 + v * 10],
   setMinVoltage6: v => [80, 100 + v * 10],
@@ -69,22 +67,43 @@ const COMMANDS = {
 
 const BATTERY_TYPES = [
   'Не подключено',
-  'LiPo',
-  'LiFe',
-  'NiMh',
+  'LiPol',
+  'LiFePO',
+  'NiMH',
   'NiCd',
-  'PbO',
-  'Суперконденсатор',
+  'PbPbO',
+  'LTO',
 ];
 
+const VOLTAGE_CONSTRAINTS = {
+  LiPol: [3.5, 4.2],
+  LiFePО: [5.6, 6.6],
+  NiCd: [4.0, 6.0],
+  NiMH: [4.0, 6.0],
+  PbPbO: [6.0, 7.0],
+  LTO: [2.0, 2.4],
+};
+
 const CONSTRAINTS = {
-  voltage: [],
-  current: [],
+  batCurrent: [0, 1],
+  batVoltage: VOLTAGE_CONSTRAINTS,
+  offVoltage: [2, 8],
+  offTime: [10, 500],
+  voltage: [12, 24],
+};
+
+const CHARGE_CURRENTS = {
+  LiPol: 1,
+  LiFePО: 0.35,
+  NiCd: 0.35,
+  NiMH: 0.35,
+  PbPbO: 0.35,
+  LTO: 1.5,
 };
 
 const MODES = [{ symbol: 'I, A' }, { symbol: 'U, B' }];
 
-const OFF_MODES = ['по напряжению', 'по времени'];
+const OFF_MODES = ['U, B', 't, c'];
 
 module.exports = {
   IS_RPI,
@@ -98,4 +117,5 @@ module.exports = {
   CONSTRAINTS,
   MODES,
   OFF_MODES,
+  CHARGE_CURRENTS,
 };

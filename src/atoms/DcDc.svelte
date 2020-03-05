@@ -12,12 +12,12 @@
   .dc-dc {
     border: 2px solid var(--text-color);
     border-radius: 4px;
-    width: 8rem;
-    height: 8rem;
+    width: 6.4rem;
+    height: 6.4rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 0.4rem 0.8rem;
+    padding: 0.2rem;
     font-weight: bold;
   }
 
