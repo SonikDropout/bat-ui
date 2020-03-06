@@ -40,6 +40,8 @@ const STATE_DATA = [
   'offMode6',
 ];
 
+const DATA_BYTE_LENGTH = IV_DATA.length * 2 + STATE_DATA.length + SEPARATORS.length;
+
 const COMMANDS = {
   turnOff: [4, 0],
   turnOn1: [8, 0],
@@ -118,4 +120,5 @@ module.exports = {
   MODES,
   OFF_MODES,
   CHARGE_CURRENTS,
+  DATA_BYTE_LENGTH,
 };

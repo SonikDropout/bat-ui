@@ -1,7 +1,12 @@
-const { SEPARATORS, IV_DATA, STATE_DATA } = require('../constants');
+const {
+  SEPARATORS,
+  IV_DATA,
+  STATE_DATA,
+  DATA_BYTE_LENGTH,
+} = require('../constants');
 
 function validate(buffer) {
-  if (buffer.indexOf(SEPARATORS) != 0)
+  if (buffer.indexOf(SEPARATORS) != 0 || buffer.length != DATA_BYTE_LENGTH)
     throw new Error('Invalid buffer recieved');
 }
 

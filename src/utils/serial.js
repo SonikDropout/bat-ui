@@ -7,25 +7,22 @@ const serial = new Serial(PORT.name, { baudRate: PORT.baudRate });
 serial.on('data', handleData);
 
 let subscribers = [];
-const buffer = Buffer.alloc(58);
-let offset = 0;
+let buffer = Buffer.from([]);
 
 function handleData(buf) {
   if (buf.toString('ascii').startsWith('ok')) buf = buf.slice(2);
   idx = buf.indexOf(SEPARATORS);
   if (idx != -1) {
-    buf.copy(buffer, offset, 0, idx);
+    buffer = Buffer.concat([buffer, buf.slice(0, idx)]);
+    console.log(buffer);
     try {
-      subscribers.forEach(fn => fn(parse(buffer.slice())));
+      subscribers.forEach(fn => fn(parse(buffer)));
     } catch (e) {
-      console.error('There is a hole in your logic:', e);
+      // console.error('There is a hole in your logic:', e);
     }
-    offset = 0;
-    buf.copy(buffer, offset, idx);
-    offset = buf.length;
+    buffer = buf.slice(idx);
   } else {
-    buf.copy(buffer, offset);
-    offset += buf.length;
+    buffer = Buffer.concat([buffer, buf])
   }
 }
 
@@ -50,8 +47,10 @@ function writeCommandFromQueue() {
     return;
   }
   const cmd = commandQueue.shift();
+  console.log('Sending command to serial:', cmd);
   serial.write(cmd);
   serial.once('data', buf => {
+    console.log('Recieved answer:', buf);
     if (!buf.toString('ascii').startsWith('ok')) {
       commandQueue.unshift(cmd);
       writeCommandFromQueue();
