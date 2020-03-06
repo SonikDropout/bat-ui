@@ -1,6 +1,6 @@
 const { writable, derived } = require('svelte/store');
-const { IV_DATA, STATE_DATA } = require('./constants');
-const { mergeKeysValues } = require('./utils/others');
+const { IV_DATA, STATE_DATA, CONSTRAINTS } = require('./constants');
+const { mergeKeysValues, getPercentage } = require('./utils/others');
 const { ipcRenderer } = require('electron');
 
 const initialIV = Object.assign({}, ...IV_DATA.map(key => ({ [key]: 0 })));
@@ -21,8 +21,14 @@ ipcRenderer.on('serialData', (e, d) => {
 });
 
 function addCharge(state) {
-  state.charge1 = 50;
-  state.charge2 = 50;
+  state.charge1 = getPercentage(
+    state.voltage1,
+    CONSTRAINTS.batVoltage[state.type1]
+  );
+  state.charge2 = getPercentage(
+    state.voltage2,
+    CONSTRAINTS.batVoltage[state.type2]
+  );
   return state;
 }
 

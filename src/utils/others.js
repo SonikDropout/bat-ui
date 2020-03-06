@@ -38,6 +38,11 @@ const randInt = (min, max) => {
   return (Math.random() * (max - min) + min) & 1;
 };
 
+const constraint = (val, [min, max]) => Math.max(min, Math.min(max, val));
+
+const getPercentage = (val, [min, max]) =>
+  constraint(Math.round(((val - min) / (max - min)) * 100), [0, 100]);
+
 module.exports = {
   clone,
   mergeRename,
@@ -46,4 +51,5 @@ module.exports = {
   countKeys,
   randInt,
   mergeKeysValues,
+  getPercentage,
 };
