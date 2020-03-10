@@ -3,12 +3,12 @@
   export let off;
   export let name;
   export let style;
-  let checked;
+  export let checked;
 </script>
 
 <label {style}>
   {off}
-  <input class="hidden" type="checkbox" {name} bind:checked on:change />
+  <input class="hidden" type="checkbox" {name} {checked} on:change />
   <span class="track" class:checked>
     <span class="thumb" />
   </span>

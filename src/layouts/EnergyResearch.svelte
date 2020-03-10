@@ -7,7 +7,8 @@
   import RangeInput from '../molecules/RangeInput';
   export let onBack;
   import { IVData, stateData } from '../stores';
-  import { BATTERY_TYPES } from '../constants';
+  import { BATTERY_TYPES, COMMANDS } from '../constants';
+  import { ipcRenderer } from 'electron';
 
   const channels = [
     { arrowDir: 'both', num: 1, type: 'inout' },
@@ -17,11 +18,33 @@
     { arrowDir: 'down', num: 5, type: 'output' },
   ];
 
+  let onoff = channels.map(ch => !!$stateData['onoff' + ch.num]);
+  let inout = [1, 2].map(n => !!$stateData['inout' + n]);
+
   function switchModes(e) {
-    const { name, cheched } = e.target;
+    const { name, checked } = e.target;
+    inout[name - 1] = checked;
+    ipcRenderer.send(
+      'serialCommand',
+      COMMANDS[`${checked ? 'charge' : 'discharge'}${name}`]
+    );
+    setTimeout(() => (inout[name - 1] = $stateData['inout' + name]), 3000);
   }
 
-  function setOutputVoltage(v) {}
+  function toggleChannel(e) {
+    const { name, checked } = e.target;
+    onoff[name - 1] = checked;
+    ipcRenderer.send(
+      'serialCommand',
+      COMMANDS[`turn${checked ? 'On' : 'Off'}${name}`],
+      'confirm' + name
+    );
+    setTimeout(() => (onoff[name - 1] = $stateData['onoff' + name]), 5000);
+  }
+
+  function setOutputVoltage(v) {
+    ipcRenderer.send('serialCommand', COMMANDS.setVoltage5(v));
+  }
 </script>
 
 <div class="layout">
@@ -46,11 +69,15 @@
           voltage={$IVData['voltage' + num]}
           current={$IVData['currentIn' + num]} />
         <Switch
+          name={num}
+          checked={onoff[num - 1]}
           on="вкл"
           off="выкл"
-          on:change={switchModes}
+          on:change={toggleChannel}
           style="grid-area: sw-{num}" />
         <Switch
+          checked={inout[num - 1]}
+          name={num}
           on="заряд"
           off="разряд"
           on:change={switchModes}
@@ -69,9 +96,11 @@
           <img src="../static/icons/battery.svg" alt="battery" />
         </div>
         <Switch
+          name={num}
+          checked={onoff[num - 1]}
           on="вкл"
           off="выкл"
-          on:change={switchModes}
+          on:change={toggleChannel}
           style="grid-area: sw-{num}" />
       {:else if type == 'output'}
         <div class="set-voltage" style="grid-area: v-{num}">
@@ -81,6 +110,7 @@
           <RangeInput
             style="margin: 0 auto"
             type="naked"
+            step={0.1}
             range={[12, 24]}
             onChange={setOutputVoltage} />
         </div>
@@ -91,9 +121,11 @@
           src="../static/icons/lamp.svg"
           alt="lamp" />
         <Switch
+          name={num}
           on="вкл"
+          checked={onoff[num - 1]}
           off="выкл"
-          on:change={switchModes}
+          on:change={toggleChannel}
           style="grid-area: sw-{num}" />
       {/if}
     {/each}
@@ -108,9 +140,11 @@
       src="../static/icons/fruit.svg"
       style="grid-area: ico-6" />
     <Switch
+      name="6"
       on="вкл"
+      checked={!!$stateData.onoff6}
       off="выкл"
-      on:change={switchModes}
+      on:change={toggleChannel}
       style="grid-area: sw-6" />
     <Button on:click={onBack} style="grid-area:back">Назад</Button>
   </main>

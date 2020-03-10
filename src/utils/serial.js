@@ -14,7 +14,6 @@ function handleData(buf) {
   idx = buf.indexOf(SEPARATORS);
   if (idx != -1) {
     buffer = Buffer.concat([buffer, buf.slice(0, idx)]);
-    console.log(buffer);
     try {
       subscribers.forEach(fn => fn(parse(buffer)));
     } catch (e) {
@@ -22,7 +21,7 @@ function handleData(buf) {
     }
     buffer = buf.slice(idx);
   } else {
-    buffer = Buffer.concat([buffer, buf])
+    buffer = Buffer.concat([buffer, buf]);
   }
 }
 
@@ -33,7 +32,7 @@ function subscribe(fn) {
 let commandQueue = [];
 let portBusy = false;
 
-function sendCommand([byte1, byte2]) {
+function sendCommand([byte1, byte2], cb = () => {}) {
   commandQueue.push(Buffer.from([20, byte1, byte2, byte1 + byte2 + 20]));
   if (!portBusy) {
     portBusy = true;
@@ -50,11 +49,11 @@ function writeCommandFromQueue() {
   console.log('Sending command to serial:', cmd);
   serial.write(cmd);
   serial.once('data', buf => {
-    console.log('Recieved answer:', buf);
+    console.log('Recieved answer:', buf.toString('ascii'));
     if (!buf.toString('ascii').startsWith('ok')) {
       commandQueue.unshift(cmd);
-      writeCommandFromQueue();
     }
+    writeCommandFromQueue();
   });
 }
 

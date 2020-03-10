@@ -15,7 +15,7 @@ module.exports = function parse(buf) {
   const result = { iv: [], state: [] };
   let i = SEPARATORS.length;
   for (let j = 0; j < IV_DATA.length; j++) {
-    result.iv.push(+(buf.readUInt16BE(i) / 1000).toPrecision(4));
+    result.iv.push(+(buf[`read${j < 7 ? 'U' : ''}Int16BE`](i) / 1000).toPrecision(4));
     i += 2;
   }
   for (let j = 0; j < STATE_DATA.length; j++) {

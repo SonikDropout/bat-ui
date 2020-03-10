@@ -70,7 +70,7 @@ const COMMANDS = {
 const BATTERY_TYPES = [
   'Не подключено',
   'LiPol',
-  'LiFePO',
+  'LiFePО',
   'NiMH',
   'NiCd',
   'PbPbO',
