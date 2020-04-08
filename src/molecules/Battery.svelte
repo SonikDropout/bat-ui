@@ -22,7 +22,7 @@
       <span>{BATTERY_TYPES[type]} </span>
       <span>T, &deg;C = {temperature}</span>
     {:else}
-    <img src="../static/icons/cross.svg" alt="cross"><span class="noop">н/д</span>
+    <img src="../app/icons/cross.svg" alt="cross"><span class="noop">н/д</span>
     {/if}
     </div>
   </div>

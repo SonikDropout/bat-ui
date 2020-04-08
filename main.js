@@ -48,7 +48,7 @@ function initPeripherals(win) {
   ipcMain.on('serialCommand', (_, ...args) => serial.sendCommand(...args));
   ipcMain.on('saveFile', () => logger.saveFile(usbPath));
   ipcMain.on('usbStorageRequest', usbPort.init);
-  ipcMain.on('intialDataRequest', (e) => (e.returnValue = initialData));
+  ipcMain.on('initialDataRequest', (e) => (e.returnValue = initialData));
   return {
     removeAllListeners() {
       usbPort.removeAllListeners();

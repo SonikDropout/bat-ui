@@ -4,10 +4,10 @@
   "description": "GUI for battery stand",
   "main": "main.js",
   "scripts": {
-    "wp-watch": "webpack --watch",
+    "wp-watch": "cross-env NODE_ENV=development webpack --watch",
     "wp-build": "cross-env NODE_ENV=production webpack",
     "postinstall": "electron-builder install-app-deps",
-    "el-watch": "cross-env NODE_ENV=development electron .",
+    "el-watch": "electron .",
     "el-build": "electron-builder --dir --linux --arch=armv7l",
     "dev": "run-p wp-watch el-watch",
     "inspect": "electron --inspect .",

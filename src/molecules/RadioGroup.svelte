@@ -48,7 +48,7 @@
       <span>
         {#if element.icon}
           <img
-            src="../static/icons/{element.icon}.svg"
+            src="../app/icons/{element.icon}.svg"
             alt={element.icon}
             class="icon" />
         {/if}

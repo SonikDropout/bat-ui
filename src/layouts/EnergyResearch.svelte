@@ -89,11 +89,11 @@
         </div>
         <div class="input-icons" style="grid-area: ico-{num}">
           <img
-            src="../static/icons/fuelCell.svg"
+            src="../app/icons/fuelCell.svg"
             style="height: 36px"
             alt="fuelCell" />
-          <img src="../static/icons/solar.svg" alt="solar" />
-          <img src="../static/icons/battery.svg" alt="battery" />
+          <img src="../app/icons/solar.svg" alt="solar" />
+          <img src="../app/icons/battery.svg" alt="battery" />
         </div>
         <Switch
           name={num}
@@ -105,20 +105,19 @@
       {:else if type == 'output'}
         <div class="set-voltage" style="grid-area: v-{num}">
           Задать напряжение
-          <br />
-          12-24В
           <RangeInput
             style="margin: 0 auto"
             type="naked"
             step={0.1}
             range={[12, 24]}
             onChange={setOutputVoltage} />
+          <strong>I, A = {$IVData.currentIn5}</strong>
         </div>
         <Arrow direction="output" style="grid-area: v-5; align-self: end;" />
         <img
           class="lamp"
           style="grid-area: ico-5"
-          src="../static/icons/lamp.svg"
+          src="../app/icons/lamp.svg"
           alt="lamp" />
         <Switch
           name={num}
@@ -137,7 +136,7 @@
     <img
       class="fruit"
       alt="fruit"
-      src="../static/icons/fruit.svg"
+      src="../app/icons/fruit.svg"
       style="grid-area: ico-6" />
     <Switch
       name="6"
@@ -214,5 +213,9 @@
   }
   .set-voltage {
     text-align: center;
+  }
+  strong {
+    margin-bottom: 0.8rem;
+    display: block;
   }
 </style>

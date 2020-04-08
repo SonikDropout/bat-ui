@@ -52,12 +52,12 @@ function addCharge(state, iv) {
   if (state.type1)
     state.charge1 = getPercentage(
       iv.voltage1,
-      CONSTRAINTS.batVoltage[BATTERY_TYPES[state.type1]]
+      CONSTRAINTS.batVoltage[state.type1]
     );
   if (state.type2)
     state.charge2 = getPercentage(
       iv.voltage2,
-      CONSTRAINTS.batVoltage[BATTERY_TYPES[state.type2]]
+      CONSTRAINTS.batVoltage[state.type2]
     );
   return state;
 }

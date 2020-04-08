@@ -1,4 +1,4 @@
 node_modules
 dist
-static/svelte.css
-static/renderer.js
+app/svelte.css
+app/renderer.js

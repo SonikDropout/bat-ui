@@ -64,8 +64,8 @@ const COMMANDS = {
   turnOff5: [60, 0],
   turnOn6: [64, 0],
   turnOff6: [68, 0],
-  setCurrent6: (v) => [72, 100 + v * 10],
-  setVoltage6: (v) => [76, 100 + v * 10],
+  setMode6: (v) => [72, 100 + v * 10],
+  setLoad6: (v) => [76, 100 + v * 10],
   setMinVoltage6: (v) => [80, 100 + v * 10],
   setMaxTime6: (v) => [84, v / 10],
   setVoltage5: (v) => [88, v * 10],
@@ -81,14 +81,15 @@ const BATTERY_TYPES = [
   'LTO',
 ];
 
-const VOLTAGE_CONSTRAINTS = {
-  LiPol: [3.5, 4.2],
-  LiFePО: [5.6, 6.6],
-  NiCd: [4.0, 6.0],
-  NiMH: [4.0, 6.0],
-  PbPbO: [6.0, 7.0],
-  LTO: [2.0, 2.4],
-};
+const VOLTAGE_CONSTRAINTS = [
+  void 0,
+  [3.5, 4.2],
+  [5.6, 6.6],
+  [4.0, 6.0],
+  [4.0, 6.0],
+  [6.0, 7.0],
+  [2.0, 2.7],
+];
 
 const CONSTRAINTS = {
   batCurrent: [0, 1],
@@ -125,7 +126,7 @@ module.exports = {
   OFF_MODES,
   CHARGE_CURRENTS,
   DATA_BYTE_LENGTH,
-  DEBOUNCED_STATE_PART: STATE_DATA.slice(
+  DEBOUNCED_STATE_DATA: STATE_DATA.slice(
     STATE_DATA.debouncedStart,
     STATE_DATA.debouncedEnd
   ),

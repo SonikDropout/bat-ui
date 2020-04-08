@@ -55,9 +55,9 @@
     modeConstraint,
     timeStart;
 
-  $: if (selectedMode == 1)
+  $: if (selectedMode == 2)
     modeConstraint = CONSTRAINTS.batVoltage[$stateData.type1];
-  $: if (selectedMode == 2) modeConstraint = CONSTRAINTS.batCurrent;
+  $: if (selectedMode == 1) modeConstraint = CONSTRAINTS.batCurrent;
 
   $: startDisabled = !$stateData.type1 || !selectedMode.value;
 
@@ -140,14 +140,12 @@
   }
 
   function selectMode(mode) {
-    selectedMode = mode;
+    selectedMode = +mode;
+    ipcRenderer.send('serialCommand', COMMANDS.setMode6(+mode));
   }
 
   function setIV(val) {
-    ipcRenderer.send(
-      'serialCommand',
-      COMMANDS[`set${selectedMode > 1 ? 'Voltage' : 'Current'}6`](val)
-    );
+    ipcRenderer.send('serialCommand', COMMANDS.setLoad6(val));
   }
   function setOffMode(mode) {
     selectedConstraint = mode;

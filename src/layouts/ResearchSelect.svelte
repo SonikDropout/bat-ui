@@ -7,12 +7,12 @@
 
 <main>
   <label class="area" transition:slideLeft>
-    <img src="../static/icons/energy.svg" alt="energy" />
+    <img src="../app/icons/energy.svg" alt="energy" />
     <p>Исследование по преобразованию и коммутации энергии</p>
     <input type="radio" class="hidden" name="appState" value={STATES.energy} on:change />
   </label>
   <label class="area" transition:slideRight>
-    <img src="../static/icons/battery.svg" alt="battery" class="bat-icon"/>
+    <img src="../app/icons/battery.svg" alt="battery" class="bat-icon"/>
     <p>Исследовани основных характеристик аккумуляторных батарей</p>
     <input type="radio" class="hidden" name="appState" value={STATES.battery} on:change />
   </label>
