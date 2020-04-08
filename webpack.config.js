@@ -8,7 +8,7 @@ module.exports = {
   entry: './src/renderer.js',
   output: {
     filename: 'renderer.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'app'),
   },
   resolve: {
     // see below for an explanation
@@ -32,12 +32,15 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [prod ? MiniCssExtractPlugin.loader : 'style-loader', 'css-loader'],
+        use: [
+          prod ? MiniCssExtractPlugin.loader : 'style-loader',
+          'css-loader',
+        ],
       },
     ],
   },
   externals: [
-    function(context, request, callback) {
+    function (context, request, callback) {
       if (
         /^path|fs|events|serialport|electron|drivelist|excel4node|usb-detection$/.test(
           request
@@ -49,9 +52,9 @@ module.exports = {
     },
   ],
   plugins: [
-		new MiniCssExtractPlugin({
-			filename: '[name].css'
-		})
-	],
+    new MiniCssExtractPlugin({
+      filename: 'svelte.css',
+    }),
+  ],
   mode,
 };

@@ -1,12 +1,13 @@
 const Serial = require('serialport');
 const { PORT, SEPARATORS } = require('../constants');
+const EventEmitter = require('events');
 const parse = require('./parser');
 
 const serial = new Serial(PORT.name, { baudRate: PORT.baudRate });
+const emitter = new EventEmitter();
 
 serial.on('data', handleData);
 
-let subscribers = [];
 let buffer = Buffer.from([]);
 
 function handleData(buf) {
@@ -15,7 +16,7 @@ function handleData(buf) {
   if (idx != -1) {
     buffer = Buffer.concat([buffer, buf.slice(0, idx)]);
     try {
-      subscribers.forEach(fn => fn(parse(buffer)));
+      emitter.emit('data', parse(buffer));
     } catch (e) {
       // console.error('There is a hole in your logic:', e);
     }
@@ -23,10 +24,6 @@ function handleData(buf) {
   } else {
     buffer = Buffer.concat([buffer, buf]);
   }
-}
-
-function subscribe(fn) {
-  subscribers.push(fn);
 }
 
 let commandQueue = [];
@@ -48,7 +45,7 @@ function writeCommandFromQueue() {
   const cmd = commandQueue.shift();
   console.log('Sending command to serial:', cmd);
   serial.write(cmd);
-  serial.once('data', buf => {
+  serial.once('data', (buf) => {
     console.log('Recieved answer:', buf.toString('ascii'));
     if (!buf.toString('ascii').startsWith('ok')) {
       commandQueue.unshift(cmd);
@@ -57,13 +54,11 @@ function writeCommandFromQueue() {
   });
 }
 
-function unsubscribeAll() {
-  subscribers = [];
+emitter.close = function close() {
+  emitter.removeAllListeners();
   if (serial.isOpen) serial.close();
-}
-
-module.exports = {
-  subscribe,
-  sendCommand,
-  unsubscribeAll,
 };
+
+emitter.sendCommand = sendCommand;
+
+module.exports = emitter;

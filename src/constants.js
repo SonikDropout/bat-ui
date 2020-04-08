@@ -40,7 +40,11 @@ const STATE_DATA = [
   'offMode6',
 ];
 
-const DATA_BYTE_LENGTH = IV_DATA.length * 2 + STATE_DATA.length + SEPARATORS.length;
+STATE_DATA.debouncedStart = 2;
+STATE_DATA.debouncedEnd = 10;
+
+const DATA_BYTE_LENGTH =
+  IV_DATA.length * 2 + STATE_DATA.length + SEPARATORS.length;
 
 const COMMANDS = {
   turnOff: [4, 0],
@@ -60,11 +64,11 @@ const COMMANDS = {
   turnOff5: [60, 0],
   turnOn6: [64, 0],
   turnOff6: [68, 0],
-  setCurrent6: v => [72, 100 + v * 10],
-  setVoltage6: v => [76, 100 + v * 10],
-  setMinVoltage6: v => [80, 100 + v * 10],
-  setMaxTime6: v => [84, v / 10],
-  setVoltage5: v => [88, v * 10],
+  setCurrent6: (v) => [72, 100 + v * 10],
+  setVoltage6: (v) => [76, 100 + v * 10],
+  setMinVoltage6: (v) => [80, 100 + v * 10],
+  setMaxTime6: (v) => [84, v / 10],
+  setVoltage5: (v) => [88, v * 10],
 };
 
 const BATTERY_TYPES = [
@@ -121,4 +125,8 @@ module.exports = {
   OFF_MODES,
   CHARGE_CURRENTS,
   DATA_BYTE_LENGTH,
+  DEBOUNCED_STATE_PART: STATE_DATA.slice(
+    STATE_DATA.debouncedStart,
+    STATE_DATA.debouncedEnd
+  ),
 };

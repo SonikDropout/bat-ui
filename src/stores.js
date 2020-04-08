@@ -4,39 +4,69 @@ const {
   STATE_DATA,
   CONSTRAINTS,
   BATTERY_TYPES,
+  DEBOUNCED_STATE_DATA,
 } = require('./constants');
-const { mergeKeysValues, getPercentage } = require('./utils/others');
+const { mergeKeysValues, getPercentage, debounce } = require('./utils/others');
 const { ipcRenderer } = require('electron');
 
-const initialIV = Object.assign({}, ...IV_DATA.map(key => ({ [key]: 0 })));
-const initialState = Object.assign(
-  {},
-  ...STATE_DATA.map(key => ({ [key]: 0 }))
+const initialData = ipcRenderer.sendSync('initialDataRequest');
+const initialIV = mergeKeysValues(IV_DATA, initialData.iv);
+const initialState = addCharge(
+  mergeKeysValues(STATE_DATA, initialData.state),
+  initialIV
 );
-
-initialState.charge1 = 0;
-initialState.charge2 = 0;
+let prevState = getDebouncedPart(initialState);
 
 const IVData = writable(initialIV);
 const stateData = writable(initialState);
+const debouncedUpdateState = debounce(
+  (newState) => stateData.update((state) => ({ ...state, ...newState })),
+  3000
+);
 
-ipcRenderer.on('serialData', (e, d) => {
-  IVData.set(mergeKeysValues(IV_DATA, d.iv));
-  stateData.set(addCharge(mergeKeysValues(STATE_DATA, d.state)));
-});
+ipcRenderer.on('serialData', handleData);
 
-function addCharge(state) {
+function handleData(e, d) {
+  const iv = mergeKeysValues(IV_DATA, d.iv);
+  IVData.set(iv);
+  const state = addCharge(mergeKeysValues(STATE_DATA, d.state), iv);
+  const debouncedStatePart = getDebouncedPart(state);
+  DEBOUNCED_STATE_DATA.forEach((key) => {
+    delete state[key];
+  });
+  if (!isStatesEqual(state, prevState)) {
+    prevState = debouncedStatePart;
+    debouncedUpdateState(debouncedStatePart);
+  }
+  stateData.update((oldState) => ({ ...oldState, ...state }));
+}
+
+function isStatesEqual(newState, state) {
+  return DEBOUNCED_STATE_DATA.reduce(
+    (flag, key) => newState[key] === state[key] || flag,
+    false
+  );
+}
+
+function addCharge(state, iv) {
   if (state.type1)
     state.charge1 = getPercentage(
-      state.voltage1,
+      iv.voltage1,
       CONSTRAINTS.batVoltage[BATTERY_TYPES[state.type1]]
     );
   if (state.type2)
     state.charge2 = getPercentage(
-      state.voltage2,
+      iv.voltage2,
       CONSTRAINTS.batVoltage[BATTERY_TYPES[state.type2]]
     );
   return state;
+}
+
+function getDebouncedPart(state) {
+  return DEBOUNCED_STATE_DATA.reduce((acc, key) => {
+    acc[key] = state[key];
+    return acc;
+  }, {});
 }
 
 module.exports = {
