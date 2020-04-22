@@ -48,7 +48,7 @@
 </script>
 
 <div class="layout">
-  <header>Исследование по преобразованию энергии</header>
+  <header>Исследование по преобразованию и коммутации энергии</header>
 
   <main>
     <div class="bus">Общая шина U, B = {$IVData.busVoltage}</div>

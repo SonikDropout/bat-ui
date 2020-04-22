@@ -3,7 +3,6 @@ const {
   IV_DATA,
   STATE_DATA,
   CONSTRAINTS,
-  BATTERY_TYPES,
   DEBOUNCED_STATE_DATA,
 } = require('./constants');
 const { mergeKeysValues, getPercentage, debounce } = require('./utils/others');

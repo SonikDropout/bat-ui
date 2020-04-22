@@ -13,7 +13,7 @@
   </label>
   <label class="area" transition:slideRight>
     <img src="../app/icons/battery.svg" alt="battery" class="bat-icon"/>
-    <p>Исследовани основных характеристик аккумуляторных батарей</p>
+    <p>Исследование основных характеристик аккумуляторных батарей</p>
     <input type="radio" class="hidden" name="appState" value={STATES.battery} on:change />
   </label>
 </main>
