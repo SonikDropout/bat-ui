@@ -106,6 +106,7 @@
             type="naked"
             step={0.1}
             range={[12, 24]}
+            defaultValue={$IVData.voltage5}
             onChange={setOutputVoltage} />
           <strong>I, A = {$IVData.currentIn5}</strong>
         </div>
@@ -125,8 +126,7 @@
       {/if}
     {/each}
     <div class="input-iv" style="grid-area: iv-6">
-      <div>U, B = {$IVData.voltage6}</div>
-      <div>I, A = {$IVData.current6}</div>
+      <div>U, B = {$IVData.voltage7}</div>
     </div>
     <Arrow direction="input" style="grid-area: ico-6" />
     <img
@@ -134,13 +134,6 @@
       alt="fruit"
       src="../app/icons/fruit.svg"
       style="grid-area: ico-6" />
-    <Switch
-      name="6"
-      on="вкл"
-      checked={$stateData.onoff6}
-      off="выкл"
-      on:change={toggleChannel}
-      style="grid-area: sw-6" />
     <Button on:click={onBack} style="grid-area:back">Назад</Button>
   </main>
 </div>

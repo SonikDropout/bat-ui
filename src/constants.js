@@ -23,6 +23,7 @@ const IV_DATA = [
   'current6',
   'temp1',
   'temp2',
+  'voltage7',
 ].flat(2);
 
 const STATE_DATA = [

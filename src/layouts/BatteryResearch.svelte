@@ -48,7 +48,7 @@
     points = [],
     saveDisabled = true,
     isDrawing,
-    unsubscribeData,
+    unsubscribeData = () => {},
     chart,
     chargeCapacity = 0,
     energyCapacity = 0,
@@ -96,7 +96,7 @@
 
   function subscribeData() {
     timeStart = Date.now();
-    const unsubscribeIV = IVData.subscirbe(getPoint);
+    const unsubscribeIV = IVData.subscribe(getPoint);
     const unsubscribeState = stateData.subscribe(monitorStop);
     unsubscribeData = () => {
       unsubscribeIV();
@@ -115,7 +115,7 @@
       x: (Date.now() - timeStart) / 1000,
       y: data[data.mode6 > 1 ? 'current6' : 'voltage6'],
     };
-    addCapacity(data.current6, data.voltage6);
+    sumCapacity(data.current6, data.voltage6);
     sendToLogger(Object.values(row));
     updateChart(row);
   }
@@ -202,13 +202,13 @@
     </Button>
     <h4>Полученные характеристики</h4>
     <div class="char-label">U, B</div>
-    <div class="char-value">{$IVData.voltage2}</div>
+    <div class="char-value">{$IVData.voltage6}</div>
     <div class="char-label second">Q, мА*c</div>
     <div class="char-value second">
       {chargeCapacity > 0.001 ? chargeCapacity.toPrecision(3) : 0}
     </div>
     <div class="char-label">I, A</div>
-    <div class="char-value">{$IVData.currentIn2}</div>
+    <div class="char-value">{$IVData.current6}</div>
     <div class="char-label second">E, мВт*с</div>
     <div class="char-value second">
       {energyCapacity > 0.001 ? energyCapacity.toPrecision(3) : 0}
