@@ -67,19 +67,25 @@
     } else {
       startResearch();
     }
-    isDrawing = !isDrawing;
   }
 
   function stopResearch() {
+    ipcRenderer.send('serialCommand', COMMANDS.turnOff6);
     unsubscribeData();
     stopDrawing();
-    ipcRenderer.send('serialCommand', COMMANDS.turnOff6);
   }
 
   function startResearch() {
+    ipcRenderer.send('serialCommand', COMMANDS.turnOn6);
+    startDrawing();
     startLogging();
     subscribeData();
-    ipcRenderer.send('serialCommand', COMMANDS.turnOn6);
+  }
+
+  function startDrawing() {
+    isDrawing = true;
+    chargeCapacity = 0;
+    energyCapacity = 0;
   }
 
   function startLogging() {
@@ -90,14 +96,14 @@
 
   function stopDrawing() {
     points = [];
-    chargeCapacity = 0;
-    energyCapacity = 0;
+    isDrawing = false;
   }
 
   function subscribeData() {
     timeStart = Date.now();
     const unsubscribeIV = IVData.subscribe(getPoint);
-    const unsubscribeState = stateData.subscribe(monitorStop);
+    let unsubscribeState = Function.prototype;
+    setTimeout(() => (unsubscribeState = stateData.subscribe(monitorStop)), 1000);
     unsubscribeData = () => {
       unsubscribeIV();
       unsubscribeState();
@@ -106,7 +112,8 @@
 
   function monitorStop(state) {
     if (!state.startStop) {
-      stopResearch();
+      stopDrawing();
+      unsubscribeData();
     }
   }
 
@@ -203,13 +210,13 @@
     <h4>Полученные характеристики</h4>
     <div class="char-label">U, B</div>
     <div class="char-value">{$IVData.voltage6}</div>
-    <div class="char-label second">Q, мА*c</div>
+    <div class="char-label second">Q, А*ч</div>
     <div class="char-value second">
       {chargeCapacity > 0.001 ? chargeCapacity.toPrecision(3) : 0}
     </div>
     <div class="char-label">I, A</div>
     <div class="char-value">{$IVData.current6}</div>
-    <div class="char-label second">E, мВт*с</div>
+    <div class="char-label second">E, Вт*ч</div>
     <div class="char-value second">
       {energyCapacity > 0.001 ? energyCapacity.toPrecision(3) : 0}
     </div>
