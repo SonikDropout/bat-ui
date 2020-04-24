@@ -40,9 +40,6 @@ const STATE_DATA = [
   'offMode6',
 ];
 
-STATE_DATA.debouncedStart = 2;
-STATE_DATA.debouncedEnd = 10;
-
 const DATA_BYTE_LENGTH =
   IV_DATA.length * 2 + STATE_DATA.length + SEPARATORS.length;
 
@@ -126,8 +123,5 @@ module.exports = {
   OFF_MODES,
   CHARGE_CURRENTS,
   DATA_BYTE_LENGTH,
-  DEBOUNCED_STATE_DATA: STATE_DATA.slice(
-    STATE_DATA.debouncedStart,
-    STATE_DATA.debouncedEnd
-  ),
+  DEBOUNCED_STATE_DATA: STATE_DATA.slice(2, 10),
 };

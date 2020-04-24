@@ -3,7 +3,6 @@ const {
   IV_DATA,
   STATE_DATA,
   CONSTRAINTS,
-  DEBOUNCED_STATE_DATA,
 } = require('./constants');
 const { mergeKeysValues, getPercentage, debounce } = require('./utils/others');
 const { ipcRenderer } = require('electron');
@@ -14,34 +13,16 @@ const initialState = addCharge(
   mergeKeysValues(STATE_DATA, initialData.state),
   initialIV
 );
-let prevState = getDebouncedPart(initialState);
 
 const IVData = writable(initialIV);
 const stateData = writable(initialState);
-const debouncedUpdateState = debounce(
-  (newState) => stateData.update((state) => ({ ...state, ...newState })),
-  3000
-);
 
 ipcRenderer.on('serialData', handleData);
 
 function handleData(e, d) {
   const iv = mergeKeysValues(IV_DATA, d.iv);
   IVData.set(iv);
-  const state = addCharge(mergeKeysValues(STATE_DATA, d.state), iv);
-  const debouncedStatePart = getDebouncedPart(state);
-  DEBOUNCED_STATE_DATA.forEach((key) => {
-    delete state[key];
-  });
-  if (!isStatesEqual(debouncedStatePart, prevState)) {
-    prevState = debouncedStatePart;
-    debouncedUpdateState(debouncedStatePart);
-  }
-  stateData.update((oldState) => ({ ...oldState, ...state }));
-}
-
-function isStatesEqual(newState, state) {
-  return DEBOUNCED_STATE_DATA.some((key) => newState[key] === state[key]);
+  stateData.set(addCharge(mergeKeysValues(STATE_DATA, d.state), iv));
 }
 
 function addCharge(state, iv) {
@@ -56,13 +37,6 @@ function addCharge(state, iv) {
       CONSTRAINTS.batVoltage[state.type2]
     );
   return state;
-}
-
-function getDebouncedPart(state) {
-  return DEBOUNCED_STATE_DATA.reduce((acc, key) => {
-    acc[key] = state[key];
-    return acc;
-  }, {});
 }
 
 module.exports = {

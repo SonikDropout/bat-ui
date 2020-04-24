@@ -18,28 +18,24 @@
     { arrowDir: 'down', num: 5, type: 'output' },
   ];
 
-  let onoff = channels.map(ch => !!$stateData['onoff' + ch.num]);
-  let inout = [1, 2].map(n => !!$stateData['inout' + n]);
-
-  function switchModes(e) {
-    const { name, checked } = e.target;
-    inout[name - 1] = checked;
+  function toggleChannel(e) {
     ipcRenderer.send(
       'serialCommand',
-      COMMANDS[`${checked ? 'charge' : 'discharge'}${name}`]
+      COMMANDS[
+        e.target.checked ? 'turnOn' + e.target.name : 'turnOff' + e.target.name
+      ]
     );
-    setTimeout(() => (inout[name - 1] = $stateData['inout' + name]), 3000);
   }
 
-  function toggleChannel(e) {
-    const { name, checked } = e.target;
-    onoff[name - 1] = checked;
+  function toggleChannelMode(e) {
     ipcRenderer.send(
       'serialCommand',
-      COMMANDS[`turn${checked ? 'On' : 'Off'}${name}`],
-      'confirm' + name
+      COMMANDS[
+        e.target.checked
+          ? 'charge' + e.target.name
+          : 'discharge' + e.target.name
+      ]
     );
-    setTimeout(() => (onoff[name - 1] = $stateData['onoff' + name]), 5000);
   }
 
   function setOutputVoltage(v) {
@@ -70,17 +66,17 @@
           current={$IVData['currentIn' + num]} />
         <Switch
           name={num}
-          checked={onoff[num - 1]}
+          checked={!!$stateData[`onoff${num}`]}
           on="вкл"
           off="выкл"
           on:change={toggleChannel}
           style="grid-area: sw-{num}" />
         <Switch
-          checked={inout[num - 1]}
+          checked={!!$stateData['inout' + num]}
           name={num}
           on="заряд"
           off="разряд"
-          on:change={switchModes}
+          on:change={toggleChannelMode}
           style="grid-area: sw-2-{num}" />
       {:else if type == 'input'}
         <div class="input-iv" style="grid-area: iv-{num}">
@@ -97,7 +93,7 @@
         </div>
         <Switch
           name={num}
-          checked={onoff[num - 1]}
+          checked={$stateData['onoff' + num]}
           on="вкл"
           off="выкл"
           on:change={toggleChannel}
@@ -122,7 +118,7 @@
         <Switch
           name={num}
           on="вкл"
-          checked={onoff[num - 1]}
+          checked={$stateData['onoff' + num]}
           off="выкл"
           on:change={toggleChannel}
           style="grid-area: sw-{num}" />
@@ -141,7 +137,7 @@
     <Switch
       name="6"
       on="вкл"
-      checked={!!$stateData.onoff6}
+      checked={$stateData.onoff6}
       off="выкл"
       on:change={toggleChannel}
       style="grid-area: sw-6" />
