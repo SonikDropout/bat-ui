@@ -33,7 +33,7 @@ function handleData(e, d) {
   DEBOUNCED_STATE_DATA.forEach((key) => {
     delete state[key];
   });
-  if (!isStatesEqual(state, prevState)) {
+  if (!isStatesEqual(debouncedStatePart, prevState)) {
     prevState = debouncedStatePart;
     debouncedUpdateState(debouncedStatePart);
   }
@@ -41,10 +41,7 @@ function handleData(e, d) {
 }
 
 function isStatesEqual(newState, state) {
-  return DEBOUNCED_STATE_DATA.reduce(
-    (flag, key) => newState[key] === state[key] || flag,
-    false
-  );
+  return DEBOUNCED_STATE_DATA.some((key) => newState[key] === state[key]);
 }
 
 function addCharge(state, iv) {
