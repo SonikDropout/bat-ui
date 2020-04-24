@@ -1,9 +1,9 @@
 <script>
-  import {BATTERY_TYPES} from '../constants';
+  import { BATTERY_TYPES } from '../constants';
   export let current;
   export let voltage;
   export let type;
-  export let charge;
+  export let charge = 0;
   export let style;
   export let temperature;
 </script>
@@ -14,16 +14,20 @@
     class="battery"
     style="background: linear-gradient(to top, #1aa2dd 0 {charge}%, white {charge}%
     100%)">
-    <div class="chars" style="background-image:linear-gradient(to bottom, #333 0 {100-charge}%, white {100-charge}%
-    100%)">
-    {#if type}
-      <span>U, B = {voltage.toFixed(2)} </span>
-      <span>I, A = {current} </span>
-      <span>{BATTERY_TYPES[type]} </span>
-      <span>T, &deg;C = {temperature}</span>
-    {:else}
-    <img src="../app/icons/cross.svg" alt="cross"><span class="noop">н/д</span>
-    {/if}
+    <div
+      class="chars"
+      class:black={charge <= 0}
+      style="background-image:linear-gradient(to bottom, #333 0 {100 - charge}%,
+      white {100 - charge}% 100%)">
+      {#if type}
+        <span>U, B = {voltage.toFixed(2)}</span>
+        <span>I, A = {current}</span>
+        <span>{BATTERY_TYPES[type]}</span>
+        <span>T, &deg;C = {temperature}</span>
+      {:else}
+        <img src="../app/icons/cross.svg" alt="cross" />
+        <span class="noop">н/д</span>
+      {/if}
     </div>
   </div>
 </div>
@@ -38,6 +42,9 @@
     flex-direction: column;
     justify-content: space-evenly;
     font-weight: bold;
+  }
+  .chars.black {
+    -webkit-text-fill-color: inherit;
   }
   .battery {
     border: 2px solid var(--text-color);
