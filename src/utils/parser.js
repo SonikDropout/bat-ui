@@ -6,7 +6,7 @@ const {
 } = require('../constants');
 
 function validate(buffer) {
-  if (buffer.indexOf(SEPARATORS) != 0 || buffer.length != DATA_BYTE_LENGTH)
+  if (buffer.indexOf(SEPARATORS) != 0)
     throw new Error('Invalid buffer recieved');
 }
 
