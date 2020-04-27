@@ -62,11 +62,12 @@ const COMMANDS = {
   turnOff5: [60, 0],
   turnOn6: [64, 0],
   turnOff6: [68, 0],
-  setMode6: (v) => [72, 100 + v * 10],
-  setLoad6: (v) => [76, 100 + v * 10],
-  setMinVoltage6: (v) => [80, 100 + v * 10],
-  setMaxTime6: (v) => [84, v / 10],
-  setVoltage5: (v) => [88, v * 10],
+  setMode6: (v) => [72, v],
+  setLoad6: (v) => [76, v * 100],
+  setOffMode: v => [80, v],
+  setMinVoltage6: (v) => [84, 100 + v * 10],
+  setMaxTime6: (v) => [88, v / 10],
+  setVoltage5: (v) => [92, v * 10],
 };
 
 const BATTERY_TYPES = [

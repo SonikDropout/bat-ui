@@ -103,7 +103,7 @@
     timeStart = Date.now();
     const unsubscribeIV = IVData.subscribe(getPoint);
     let unsubscribeState = Function.prototype;
-    setTimeout(() => (unsubscribeState = stateData.subscribe(monitorStop)), 1000);
+    setTimeout(() => (unsubscribeState = stateData.subscribe(monitorStop)), 1500);
     unsubscribeData = () => {
       unsubscribeIV();
       unsubscribeState();
@@ -111,7 +111,7 @@
   }
 
   function monitorStop(state) {
-    if (!state.startStop) {
+    if (!state.startStop6) {
       stopDrawing();
       unsubscribeData();
     }
@@ -155,12 +155,13 @@
     ipcRenderer.send('serialCommand', COMMANDS.setLoad6(val));
   }
   function setOffMode(mode) {
-    selectedConstraint = mode;
+    selectedConstraint = +mode;
+    ipcRenderer.send('serialCommand', COMMANDS.setOffMode(+mode));
   }
   function setConstraint(val) {
     ipcRenderer.send(
       'serialCommand',
-      COMMANDS[`set${val ? 'MaxTime' : 'MinVoltage'}6`](val)
+      COMMANDS[`set${selectedConstraint ? 'MaxTime' : 'MinVoltage'}6`](val)
     );
   }
 </script>
