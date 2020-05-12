@@ -101,7 +101,10 @@
     timeStart = Date.now();
     const unsubscribeIV = IVData.subscribe(getPoint);
     let unsubscribeState = Function.prototype;
-    setTimeout(() => (unsubscribeState = stateData.subscribe(monitorStop)), 1500);
+    setTimeout(
+      () => (unsubscribeState = stateData.subscribe(monitorStop)),
+      1500
+    );
     unsubscribeData = () => {
       unsubscribeIV();
       unsubscribeState();
@@ -220,6 +223,7 @@
     </div>
     <Button
       on:click={onBack}
+      disabled={isDrawing}
       style="grid-area: 11 / 5 / 13 / 7; align-self: end"
       id="back">
       Назад
