@@ -19,6 +19,6 @@
     text-align: center;
     font-size: 20px;
     line-height: 1;
-    font-family: Arial sans-serif;
+    font-weight: bold;
   }
 </style>

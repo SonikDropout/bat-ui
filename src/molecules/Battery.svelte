@@ -20,7 +20,7 @@
       style="background-image:linear-gradient(to bottom, #333 0 {100 - charge}%,
       white {100 - charge}% 100%)">
       {#if type}
-        <span>U, B = {voltage.toFixed(3)}</span>
+        <span>U, B = {voltage}</span>
         <span>I, A = {current}</span>
         <span>{BATTERY_TYPES[type]}</span>
         <span>T, &deg;C = {temperature}</span>
@@ -44,7 +44,7 @@
     font-weight: bold;
   }
   .chars.black {
-    -webkit-text-fill-color: inherit;
+    background-color: var(--text-color);
   }
   .battery {
     border: 2px solid var(--text-color);
