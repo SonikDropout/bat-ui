@@ -1,9 +1,5 @@
 const { writable, derived } = require('svelte/store');
-const {
-  IV_DATA,
-  STATE_DATA,
-  CONSTRAINTS,
-} = require('./constants');
+const { IV_DATA, STATE_DATA, CONSTRAINTS } = require('./constants');
 const { mergeKeysValues, getPercentage, debounce } = require('./utils/others');
 const { ipcRenderer } = require('electron');
 
@@ -39,7 +35,14 @@ function addCharge(state, iv) {
   return state;
 }
 
+function getValue(store) {
+  let val;
+  store.subscribe(($val) => (val = $val))();
+  return val;
+}
+
 module.exports = {
   IVData,
   stateData,
+  getValue
 };

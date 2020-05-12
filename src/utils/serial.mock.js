@@ -4,12 +4,14 @@ const EventEmitter = require('events');
 const serial = new EventEmitter();
 const state = Array(STATE_DATA.length).fill(0);
 state[0] = 1;
+setTimeout(() => (state[0] = 0), 5000);
+setTimeout(() => (state[0] = 3), 7000);
 const iv = Array(IV_DATA.length).fill(0);
 
 let interval = setInterval(sendData, 1000);
 
 function sendData() {
-  serial.emit('data', { iv, state });
+  serial.emit('data', { iv: iv.map((v) => v.toFixed(2)), state });
 }
 
 serial.sendCommand = function sendCommand(cmd) {

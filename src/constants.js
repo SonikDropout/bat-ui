@@ -26,6 +26,9 @@ const IV_DATA = [
   'voltage7',
 ].flat(2);
 
+const PRECISION = Array(IV_DATA.length - 3).fill(2);
+PRECISION.push(1, 1, 1);
+
 const STATE_DATA = [
   'type1',
   'type2',
@@ -64,7 +67,7 @@ const COMMANDS = {
   turnOff6: [68, 0],
   setMode6: (v) => [72, v],
   setLoad6: (v) => [76, v * 100],
-  setOffMode: v => [80, v],
+  setOffMode: (v) => [80, v],
   setMinVoltage6: (v) => [84, 100 + v * 10],
   setMaxTime6: (v) => [88, v / 10],
   setVoltage5: (v) => [92, v * 10],
@@ -125,5 +128,6 @@ module.exports = {
   OFF_MODES,
   CHARGE_CURRENTS,
   DATA_BYTE_LENGTH,
+  PRECISION,
   DEBOUNCED_STATE_DATA: STATE_DATA.slice(2, 10),
 };

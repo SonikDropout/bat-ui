@@ -3,6 +3,7 @@ const {
   IV_DATA,
   STATE_DATA,
   DATA_BYTE_LENGTH,
+  PRECISION,
 } = require('../constants');
 
 function validate(buffer) {
@@ -15,11 +16,11 @@ module.exports = function parse(buf) {
   const result = { iv: [], state: [] };
   let i = SEPARATORS.length;
   for (let j = 0; j < IV_DATA.length; j++) {
-    result.iv.push(
-      +(
-        buf[`read${j < 7 ? 'U' : ''}Int16BE`](i) / (j < 20 ? 1000 : 10)
-      ).toPrecision(4)
-    );
+    let val;
+    if (j < 7) val = (buf.readUInt16BE(i) / 1000).toFixed(PRECISION[j]);
+    else if (j < 20) val = (buf.redInt16BE(i) / 1000).toFixed(PRECISION[j]);
+    else val = (buf.readUInt16BE(i) / 10).toFixed(PRECISION[j]);
+    result.iv.push(val);
     i += 2;
   }
   for (let j = 0; j < STATE_DATA.length; j++) {

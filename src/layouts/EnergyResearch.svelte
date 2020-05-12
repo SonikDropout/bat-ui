@@ -6,7 +6,7 @@
   import Switch from '../atoms/Switch';
   import RangeInput from '../molecules/RangeInput';
   export let onBack;
-  import { IVData, stateData } from '../stores';
+  import { IVData, stateData, getValue } from '../stores';
   import { BATTERY_TYPES, COMMANDS } from '../constants';
   import { ipcRenderer } from 'electron';
 
@@ -17,6 +17,8 @@
     { arrowDir: 'up', num: 4, type: 'input' },
     { arrowDir: 'down', num: 5, type: 'output' },
   ];
+
+  const initialIV = getValue(IVData);
 
   function toggleChannel(e) {
     ipcRenderer.send(
@@ -106,11 +108,12 @@
             type="naked"
             step={0.1}
             range={[12, 24]}
-            defaultValue={$IVData.voltage5}
+            defaultValue={+initialIV.voltage5}
             onChange={setOutputVoltage} />
           <strong>I, A = {$IVData.currentIn5}</strong>
+          <strong>U, B = {$IVData.voltage5}</strong>
         </div>
-        <Arrow direction="output" style="grid-area: v-5; align-self: end;" />
+        <Arrow direction="output" style="grid-area: ico-5; align-self: start;" />
         <img
           class="lamp"
           style="grid-area: ico-5"
@@ -198,7 +201,8 @@
   }
   .lamp {
     height: 6.4rem;
-    align-self: center;
+    align-self: end;
+    margin-bottom: 1.6rem;
   }
   .set-voltage {
     text-align: center;
