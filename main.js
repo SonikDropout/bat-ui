@@ -47,7 +47,7 @@ function initPeripherals(win) {
   ipcMain.on('excelRow', (_, ...args) => logger.writeRow(...args));
   ipcMain.on('serialCommand', (_, ...args) => serial.sendCommand(...args));
   ipcMain.on('saveFile', () => logger.saveFile(usbPath));
-  ipcMain.on('usbStorageRequest', usbPort.init);
+  ipcMain.on('usbStatusRequest', usbPort.init);
   ipcMain.on('initialDataRequest', (e) => (e.returnValue = initialData));
   return {
     removeAllListeners() {

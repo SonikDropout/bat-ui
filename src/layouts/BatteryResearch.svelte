@@ -1,6 +1,7 @@
 <script>
   import Select from '../molecules/Select';
   import Button from '../atoms/Button';
+  import SaveButton from '../organisms/SaveButton';
   import RangeInput from '../molecules/RangeInput';
   import { ipcRenderer } from 'electron';
   import Chart from 'chart.js';
@@ -27,10 +28,6 @@
     );
     chart.options.onClick = chart.resetZoom;
   });
-
-  ipcRenderer.send('usbStorageRequest');
-  ipcRenderer.on('usbConnected', () => (saveDisabled = false));
-  ipcRenderer.on('usbDisconnected', () => (saveDisabled = true));
 
   const modeOptions = [
     { label: 'режим не выбран', value: 0 },
@@ -92,6 +89,7 @@
     const fileName = '';
     const headers = [];
     ipcRenderer.send('startFileWrite', fileName, headers);
+    saveDisabled = false;
   }
 
   function stopDrawing() {
@@ -122,7 +120,7 @@
       x: (Date.now() - timeStart) / 1000,
       y: data[data.mode6 > 1 ? 'current6' : 'voltage6'],
     };
-    sumCapacity(data.current6, data.voltage6);
+    sumCapacity(+data.current6, +data.voltage6);
     sendToLogger(Object.values(row));
     updateChart(row);
   }
@@ -140,10 +138,6 @@
 
   function sendToLogger(row) {
     ipcRenderer.send('excelRow', row);
-  }
-
-  function saveFile() {
-    ipcRenderer.send('saveFile');
   }
 
   function selectMode(mode) {
@@ -230,13 +224,11 @@
       id="back">
       Назад
     </Button>
-    <Button
-      on:click={saveFile}
-      id="save"
+    <SaveButton
       style="grid-area: 11 / 7 / 13 / 13; align-self: end"
       disabled={saveDisabled}>
       Запись данных на usb-устройство
-    </Button>
+    </SaveButton>
   </main>
 </div>
 
