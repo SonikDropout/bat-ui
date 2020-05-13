@@ -16,7 +16,10 @@ module.exports = function parse(buf) {
   let i = SEPARATORS.length;
   for (let j = 0; j < IV_DATA.length; j++) {
     let val;
-    if (j < 7) val = (buf.readUInt16BE(i) / 1000).toFixed(2);
+    if (!j) {
+      val = buf.readUInt16BE(i) / 1000;
+      val < 0.2 ? '0.00' : val.toFixed(2);
+    } else if (j < 7) val = (buf.readUInt16BE(i) / 1000).toFixed(2);
     else if (j < 20) val = (buf.readInt16BE(i) / 1000).toFixed(2);
     else val = (buf.readUInt16BE(i) / 10).toFixed(1);
     result.iv.push(val);
