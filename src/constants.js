@@ -26,9 +26,6 @@ const IV_DATA = [
   'voltage7',
 ].flat(2);
 
-const PRECISION = Array(IV_DATA.length - 3).fill(2);
-PRECISION.push(1, 1, 1);
-
 const STATE_DATA = [
   'type1',
   'type2',
@@ -128,6 +125,5 @@ module.exports = {
   OFF_MODES,
   CHARGE_CURRENTS,
   DATA_BYTE_LENGTH,
-  PRECISION,
   DEBOUNCED_STATE_DATA: STATE_DATA.slice(2, 10),
 };

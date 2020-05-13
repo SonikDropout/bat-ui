@@ -24,12 +24,12 @@ function handleData(e, d) {
 function addCharge(state, iv) {
   if (state.type1)
     state.charge1 = getPercentage(
-      iv.voltage1,
+      +iv.voltage1,
       CONSTRAINTS.batVoltage[state.type1]
     );
   if (state.type2)
     state.charge2 = getPercentage(
-      iv.voltage2,
+      +iv.voltage2,
       CONSTRAINTS.batVoltage[state.type2]
     );
   return state;
