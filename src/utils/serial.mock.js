@@ -4,9 +4,19 @@ const EventEmitter = require('events');
 const serial = new EventEmitter();
 const state = Array(STATE_DATA.length).fill(0);
 state[0] = 1;
-setTimeout(() => (state[0] = 0), 5000);
-setTimeout(() => (state[0] = 3), 7000);
+(function loopBatteries() {
+  setTimeout(() => {
+    state[0] = 0;
+    iv[1] = 0;
+  }, 5000);
+  setTimeout(() => {
+    state[0] = 3;
+    iv[1] = 5;
+    loopBatteries();
+  }, 7000);
+})();
 const iv = Array(IV_DATA.length).fill(0);
+iv[1] = 4;
 
 let interval = setInterval(sendData, 1000);
 

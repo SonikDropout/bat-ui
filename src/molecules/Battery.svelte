@@ -6,6 +6,7 @@
   export let charge = 0;
   export let style;
   export let temperature;
+  $: if (!type) charge = 0;
 </script>
 
 <div class="box" {style}>
