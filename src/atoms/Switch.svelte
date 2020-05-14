@@ -3,6 +3,7 @@
   export let off;
   export let name;
   export let style;
+  export let disabled;
   let suggestedChecked;
   export { suggestedChecked as checked };
   $: checked = suggestedChecked;
@@ -10,8 +11,14 @@
 
 <label {style}>
   {off}
-  <input class="hidden" type="checkbox" {name} bind:checked on:change />
-  <span class="track" class:checked>
+  <input
+    class="hidden"
+    type="checkbox"
+    {name}
+    {disabled}
+    bind:checked
+    on:change />
+  <span class="track" class:checked class:disabled>
     <span class="thumb" />
   </span>
   {on}
@@ -34,6 +41,9 @@
   }
   .track.checked {
     background-color: var(--corporate-orange);
+  }
+  .track.disabled {
+    opacity: 0.6;
   }
 
   .thumb {

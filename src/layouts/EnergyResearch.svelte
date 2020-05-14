@@ -69,12 +69,14 @@
         <Switch
           name={num}
           checked={!!$stateData[`onoff${num}`]}
+          disabled={!$stateData[`type${num}`]}
           on="вкл"
           off="выкл"
           on:change={toggleChannel}
           style="grid-area: sw-{num}" />
         <Switch
           checked={!!$stateData['inout' + num]}
+          disabled={!$stateData[`type${num}`]}
           name={num}
           on="заряд"
           off="разряд"
