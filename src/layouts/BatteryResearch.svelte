@@ -50,11 +50,16 @@
     chargeCapacity = 0,
     energyCapacity = 0,
     modeConstraint,
+    offModeConstraint,
     timeStart;
 
   $: if (selectedMode == 2)
     modeConstraint = CONSTRAINTS.batVoltage[$stateData.type1];
-  $: if (selectedMode == 1) modeConstraint = CONSTRAINTS.batCurrent;
+  $: if (selectedMode == 1)
+    modeConstraint = CONSTRAINTS.batCurrent[$stateData.type1];
+
+  $: if (selectedConstraint) offModeConstraint = CONSTRAINTS.offTime;
+  else offModeConstraint = CONSTRAINTS.batVoltage[$stateData.type1] || [3, 6];
 
   $: startDisabled = !$stateData.type1 || !selectedMode.value;
 
@@ -198,7 +203,7 @@
       style="grid-column: 2 / 4"
       onChange={setConstraint}
       step={selectedConstraint ? 10 : 0.1}
-      range={CONSTRAINTS[selectedConstraint ? 'offTime' : 'offVoltage']} />
+      range={offModeConstraint} />
     <Button
       style="grid-column: 1 / 3; align-self: start"
       id="onoff"

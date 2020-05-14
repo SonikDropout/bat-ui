@@ -90,21 +90,21 @@ const VOLTAGE_CONSTRAINTS = [
   [2.0, 2.7],
 ];
 
+const CURRENT_CONSTRAINTS = [
+  [0, 1],
+  [0, 1],
+  [0, 0.35],
+  [0, 0.35],
+  [0, 0.25],
+  [0, 1],
+]
+
 const CONSTRAINTS = {
-  batCurrent: [0, 1],
+  batCurrent: CURRENT_CONSTRAINTS,
   batVoltage: VOLTAGE_CONSTRAINTS,
   offVoltage: [2, 8],
   offTime: [10, 500],
   voltage: [12, 24],
-};
-
-const CHARGE_CURRENTS = {
-  LiPol: 1,
-  LiFePО: 0.35,
-  NiCd: 0.35,
-  NiMH: 0.35,
-  PbPbO: 0.35,
-  LTO: 1.5,
 };
 
 const MODES = [{ symbol: 'I, A' }, { symbol: 'U, B' }];
@@ -123,7 +123,6 @@ module.exports = {
   CONSTRAINTS,
   MODES,
   OFF_MODES,
-  CHARGE_CURRENTS,
   DATA_BYTE_LENGTH,
   DEBOUNCED_STATE_DATA: STATE_DATA.slice(2, 10),
 };
