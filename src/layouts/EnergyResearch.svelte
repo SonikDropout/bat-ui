@@ -5,6 +5,7 @@
   import Battery from '../molecules/Battery';
   import Switch from '../atoms/Switch';
   import RangeInput from '../molecules/RangeInput';
+  import CalibrationModal from '../organisms/CalibrationModal';
   export let onBack;
   import { IVData, stateData, getValue } from '../stores';
   import { BATTERY_TYPES, COMMANDS } from '../constants';
@@ -45,6 +46,7 @@
   }
 </script>
 
+<CalibrationModal />
 <div class="layout">
   <header>Исследование по преобразованию и коммутации энергии</header>
 

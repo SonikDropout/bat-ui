@@ -68,6 +68,7 @@ const COMMANDS = {
   setMinVoltage6: (v) => [84, 100 + v * 10],
   setMaxTime6: (v) => [88, v / 10],
   setVoltage5: (v) => [92, v * 10],
+  calibrateVoltage: [96, 0],
 };
 
 const BATTERY_TYPES = [
