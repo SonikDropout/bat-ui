@@ -1,5 +1,6 @@
 <script>
   import Select from '../molecules/Select';
+  import Toggle from '../atoms/Toggle';
   import Button from '../atoms/Button';
   import SaveButton from '../organisms/SaveButton';
   import RangeInput from '../molecules/RangeInput';
@@ -166,13 +167,21 @@
       COMMANDS[`set${selectedConstraint ? 'MaxTime' : 'MinVoltage'}6`](val)
     );
   }
+  function toggleFridge(e) {
+    // ipcRenderer.send(
+    //   'serialCommand',
+    //   COMMANDS[`turn${e.target.checked ? 'On' : 'Off'}Fridge`]
+    // );
+  }
 </script>
 
 <div class="layout">
   <header>Исследование основных характеристик аккумуляторных батарей</header>
   <main>
     <div class="label">Исследуемый тип АКБ</div>
-    <h3>{BATTERY_TYPES[$stateData.type1]}</h3>
+    <h3>
+      {BATTERY_TYPES[$stateData.type1] || 'Подключите батарею к 7 каналу'}
+    </h3>
     <div class="label">Режим исследования</div>
     <Select
       title={!$stateData.type1 ? 'Подключите батарею чтобы выбрать режим исследования' : ''}
@@ -223,8 +232,23 @@
     <div class="char-value second">
       {energyCapacity > 0.001 ? energyCapacity.toPrecision(3) : 0}
     </div>
+    <div class="thermo-module">
+      <h4 class="thermo-title">Исследование характеристик АКБ при различных тепературах</h4>
+      <div class="thermo-controls">
+        <div>Модуль термостатирования</div>
+        <span>
+          T
+          <sub>АКБ</sub> = {$IVData.temp1}&deg;C
+        </span>
+        <Toggle on:change={toggleFridge} />
+        <span>
+          T
+          <sub>внутр</sub> = {$IVData.temp1}&deg;C
+        </span>
+      </div>
+    </div>
     <div class="chart">
-      <canvas id="chart" height="400" width="640" />
+      <canvas id="chart" height="350" width="640" />
     </div>
     <Button
       on:click={onBack}
@@ -288,6 +312,19 @@
   .chart {
     align-self: end;
     grid-column: 5 / 13;
-    grid-row: 1 / 11;
+    grid-row: 3 / 11;
+  }
+  .thermo-module {
+    grid-column: 6 / 12;
+    grid-row: 1 / 3;
+  }
+  .thermo-title {
+    text-align: left;
+    margin-bottom: 1.6rem;
+  }
+  .thermo-controls {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    grid-template-rows: repeat(2, auto);
   }
 </style>

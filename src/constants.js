@@ -71,7 +71,7 @@ const COMMANDS = {
 };
 
 const BATTERY_TYPES = [
-  'Не подключено',
+  void 0,
   'LiPol',
   'LiFePО',
   'NiMH',
