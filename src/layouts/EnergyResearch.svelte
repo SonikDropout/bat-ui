@@ -147,7 +147,7 @@
 
 <style>
   main {
-    grid-template-columns: repeat(6, 14rem);
+    grid-template-columns: repeat(6, 14.2rem);
     grid-template-areas:
       'bus bus bus bus bus .'
       'ar-1-1 ar-1-2 ar-1-3 ar-1-4 ar-1-5 .'
