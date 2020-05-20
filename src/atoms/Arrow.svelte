@@ -14,10 +14,10 @@
 
 <style>
   .arrow {
-    height: 24px;
+    height: 2.4rem;
     display: flex;
     text-align: center;
-    font-size: 20px;
+    font-size: 2rem;
     line-height: 1;
     font-weight: bold;
   }

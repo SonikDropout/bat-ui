@@ -34,7 +34,7 @@
     padding: 3.2rem 4rem;
   }
   label img {
-    height: 120px;
+    height: 12rem;
     display: block;
     margin: 0 auto;
   }

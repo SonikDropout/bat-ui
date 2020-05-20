@@ -268,7 +268,7 @@
 <style>
   main {
     grid-template-rows: repeat(8, 3.2rem) repeat(2, 5rem) repeat(2, 3.2rem);
-    grid-row-gap: 8px;
+    grid-row-gap: .8rem;
     line-height: 1;
   }
   .label,

@@ -92,7 +92,7 @@
         <div class="input-icons" style="grid-area: ico-{num}">
           <img
             src="../app/icons/fuelCell.svg"
-            style="height: 36px"
+            style="height: 3.6rem"
             alt="fuelCell" />
           <img src="../app/icons/solar.svg" alt="solar" />
           <img src="../app/icons/battery.svg" alt="battery" />
@@ -160,7 +160,7 @@
       '. . ico-3 ico-4 ico-5 ico-6'
       'sw-1 sw-2 sw-3 sw-4 ico-5 sw-6'
       'sw-2-1 sw-2-2 . . sw-5 back';
-    grid-template-rows: 3.2rem 24px 3.2rem 24px 6.4rem 24px repeat(3, 6.4rem) repeat(
+    grid-template-rows: 3.2rem 2.4rem 3.2rem 2.4rem 6.4rem 2.4rem repeat(3, 6.4rem) repeat(
         2,
         4rem
       );
