@@ -22,6 +22,7 @@ html {
   font-size: 62.5%;
 }
 
+
 html,
 body {
   position: relative;
@@ -92,4 +93,23 @@ h4,
 h5,
 h6 {
   font-weight: 300;
+}
+
+@media screen and (min-width: 1200px) {
+  html {
+    font-size: 78.1%;
+  }
+  header {
+    height: 8rem;
+    line-height: 8rem;
+  }
+  main {
+    margin-top: 2rem;
+  }
+  .energy-research {
+    grid-template-rows: 3.2rem 2.4rem 3.2rem 2.4rem 6.4rem 2.4rem repeat(3, 8rem) repeat(
+      2,
+      4rem
+    );
+  }
 }

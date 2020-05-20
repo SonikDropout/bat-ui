@@ -50,7 +50,7 @@
 <div class="layout">
   <header>Исследование по преобразованию и коммутации энергии</header>
 
-  <main>
+  <main class="energy-research">
     <div class="bus">Общая шина U, B = {$IVData.busVoltage}</div>
     {#each channels as { type, num }}
       <Arrow direction={type} style="grid-area: ar-1-{num}" />
@@ -133,7 +133,7 @@
       {/if}
     {/each}
     <div class="input-iv" style="grid-area: iv-6">
-      <div>U, B = {$IVData.voltage7}</div>
+      <div>U, мB = {$IVData.voltage7}</div>
     </div>
     <Arrow direction="input" style="grid-area: ico-6" />
     <img
@@ -166,6 +166,7 @@
       );
     justify-items: center;
     align-items: start;
+    margin-top: 0;
   }
   .bus {
     justify-self: stretch;
