@@ -15,7 +15,7 @@
     MODES,
     OFF_MODES,
   } from '../constants';
-  import { stateData, IVData } from '../stores';
+  import { stateData, IVData, getValue } from '../stores';
   import { onMount } from 'svelte';
   export let onBack;
 
@@ -52,15 +52,15 @@
     energyCapacity = 0,
     modeConstraint,
     offModeConstraint,
+    batteryType,
     timeStart;
 
-  $: if (selectedMode == 2)
-    modeConstraint = CONSTRAINTS.batVoltage[$stateData.type1];
-  $: if (selectedMode == 1)
-    modeConstraint = CONSTRAINTS.batCurrent[$stateData.type1];
+  stateData.subscribe(state => {
+    if (state.type1 !== batteryType) batteryType = state.type1;
+  });
 
   $: if (selectedConstraint) offModeConstraint = CONSTRAINTS.offTime;
-  else offModeConstraint = CONSTRAINTS.batVoltage[$stateData.type1] || [3, 6];
+  else offModeConstraint = CONSTRAINTS.batVoltage[batteryType] || [3, 6];
 
   $: startDisabled = !$stateData.type1 || !selectedMode.value;
 
@@ -190,13 +190,13 @@
       options={modeOptions}
       defaultValue={selectedMode}
       onChange={selectMode} />
-    {#if selectedMode}
+    {#if $stateData.type1 && selectedMode}
       <div class="label-inline">{MODES[selectedMode - 1].symbol}</div>
       <RangeInput
         step={0.1}
         style="grid-column: 2 / 4"
         onChange={setIV}
-        range={modeConstraint} />
+        range={CONSTRAINTS[selectedMode > 1 ? 'batVoltage' : 'batCurrent'][batteryType]} />
     {:else}
       <div class="spacer" />
     {/if}
