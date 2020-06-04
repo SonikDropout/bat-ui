@@ -150,7 +150,7 @@
   function selectMode(mode) {
     selectedMode = +mode;
     ipcRenderer.send('serialCommand', COMMANDS.setMode6(+mode));
-    chart.options.scales.yAxes[0].scaleLabel.labelString = modeOptions[selectMode > 1 ? 1 : 2].symbol;
+    chart.options.scales.yAxes[0].scaleLabel.labelString = modeOptions[selectedMode > 1 ? 1 : 2].symbol;
     chart.update();
   }
 
