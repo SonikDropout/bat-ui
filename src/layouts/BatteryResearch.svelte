@@ -12,8 +12,6 @@
     BATTERY_TYPES,
     COMMANDS,
     CONSTRAINTS,
-    MODES,
-    OFF_MODES,
   } from '../constants';
   import { stateData, IVData, getValue } from '../stores';
   import { onMount } from 'svelte';
@@ -24,7 +22,7 @@
       document.getElementById('chart').getContext('2d'),
       configureChart(points, {
         x: 't, c',
-        y: OFF_MODES[Math.abs(selectedMode - 2)] || 'I, A',
+        y: modeOptions[selectedMode].symbol || 'I, A',
       })
     );
     chart.options.onClick = chart.resetZoom;
@@ -32,13 +30,13 @@
 
   const modeOptions = [
     { label: 'режим не выбран', value: 0 },
-    { label: 'по постоянному току', value: 1 },
-    { label: 'по постоянному напряжению', value: 2 },
+    { label: 'по постоянному току', value: 1, symbol: 'I, A' },
+    { label: 'по постоянному напряжению', value: 2, symbol: 'U, B' },
   ];
 
   const constraintOptions = [
-    { label: 'по напряжению', value: 0 },
-    { label: 'по времени', value: 1 },
+    { label: 'по напряжению', value: 0, symbol: 'U, B' },
+    { label: 'по времени', value: 1, symbol: 't, c' },
   ];
 
   let selectedMode = $stateData.mode6,
@@ -109,7 +107,7 @@
     let unsubscribeState = Function.prototype;
     setTimeout(
       () => (unsubscribeState = stateData.subscribe(monitorStop)),
-      1500
+      2500
     );
     unsubscribeData = () => {
       unsubscribeIV();
@@ -191,7 +189,7 @@
       defaultValue={selectedMode}
       onChange={selectMode} />
     {#if $stateData.type1 && selectedMode}
-      <div class="label-inline">{MODES[selectedMode - 1].symbol}</div>
+      <div class="label-inline">{modeOptions[selectedMode].symbol}</div>
       <RangeInput
         step={0.1}
         style="grid-column: 2 / 4"
@@ -207,7 +205,7 @@
       onChange={setOffMode}
       options={constraintOptions}
       defaultValue={selectedConstraint} />
-    <div class="label-inline">{OFF_MODES[selectedConstraint]}</div>
+    <div class="label-inline">{constraintOptions[selectedConstraint].symbol}</div>
     <RangeInput
       style="grid-column: 2 / 4"
       onChange={setConstraint}
