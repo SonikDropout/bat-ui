@@ -22,7 +22,7 @@
       document.getElementById('chart').getContext('2d'),
       configureChart(points, {
         x: 't, c',
-        y: modeOptions[selectedMode].symbol || 'I, A',
+        y: modeOptions[selectedMode > 1 ? 1 : 2].symbol,
       })
     );
     chart.options.onClick = chart.resetZoom;
@@ -124,8 +124,8 @@
 
   function getPoint(data) {
     const row = {
-      x: (Date.now() - timeStart) / 1000,
-      y: +data[data.mode6 > 1 ? 'current6' : 'voltage6'],
+      x: Math.round((Date.now() - timeStart) / 1000),
+      y: +data[selectedMode > 1 ? 'current6' : 'voltage6'],
     };
     sumCapacity(+data.current6, +data.voltage6);
     sendToLogger(Object.values(row));
