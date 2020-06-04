@@ -10,10 +10,9 @@
   }
 </script>
 
-{#if state == STATES.battery}
-  <BatteryResearch onBack={() => (state = STATES.initial)} />
+{#if state == STATES.initial}
+  <ResearchSelect on:change={selectResearch} />
 {:else if state == STATES.energy}
   <EnergyResearch onBack={() => (state = STATES.initial)} />
-{:else}
-  <ResearchSelect on:change={selectResearch} />
 {/if}
+<BatteryResearch onBack={() => (state = STATES.initial)} />
