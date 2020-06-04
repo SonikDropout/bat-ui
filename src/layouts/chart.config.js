@@ -34,7 +34,7 @@ module.exports = function config(points, axesLabels) {
             },
             ticks: {
               maxTickLimit: 8,
-              max: 10,
+              suggestedMax: 10,
               min: 0,
             }
           }
