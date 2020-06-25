@@ -8,7 +8,7 @@
     "wp-build": "cross-env NODE_ENV=production webpack",
     "postinstall": "electron-builder install-app-deps",
     "el-watch": "cross-env NODE_ENV=development electron .",
-    "el-build": "electron-builder --dir --linux --arch=armv7l",
+    "el-build": "electron-builder --dir --linux --armv7l",
     "dev": "run-p wp-watch el-watch",
     "inspect": "electron --inspect .",
     "build": "run-s wp-build el-build"
@@ -38,6 +38,12 @@
     "excel4node": "^1.7.2",
     "serialport": "^8.0.7",
     "usb-detection": "^4.7.0"
+  },
+  "build": {
+    "linux": {
+      "executableName": "bat-ui",
+      "category": "education"
+    }
   },
   "prettier": {
     "svelteSortOrder": "scripts-markup-styles",
