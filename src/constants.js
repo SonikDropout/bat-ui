@@ -82,7 +82,7 @@ const BATTERY_TYPES = [
 ];
 
 const VOLTAGE_CONSTRAINTS = [
-  void 0,
+  [],
   [3.5, 4.2],
   [5.6, 6.6],
   [4.0, 6.0],
