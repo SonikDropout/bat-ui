@@ -4,15 +4,18 @@
   export let style;
   import { ipcRenderer } from 'electron';
   import { fly } from 'svelte/transition';
-  
+
   ipcRenderer.send('usbStatusRequest');
 
   let isSaving, isSaveFailed, saveMessage, isActive;
 
   ipcRenderer
     .on('usbConnected', () => (isActive = true))
-    .on('usbDisconnected', () => (isActive = false));
-    
+    .on('usbDisconnected', () => {
+      isActive = false;
+      saveMessage = '';
+    });
+
   function handleClick() {
     disabled = true;
     isSaving = true;
@@ -34,7 +37,7 @@
     isSaveFailed = false;
   }
   function ejectUSB() {
-    ipcRenderer.send('ejectUSB', closePopup);
+    ipcRenderer.send('ejectUSB');
   }
 </script>
 
@@ -46,7 +49,7 @@
 </Button>
 {#if saveMessage}
   <div class="popup" transition:fly={{ y: -200 }}>
-    <span class="popup-close">x</span>
+    <span on:click={closePopup} class="popup-close">x</span>
     <p>{saveMessage}</p>
     <Button on:click={ejectUSB} size="sm">извлечь</Button>
   </div>
@@ -70,6 +73,8 @@
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     border-radius: 8px;
     padding: 2.4rem;
+    background-color: var(--bg-color);
+    z-index: 9999;
   }
   .popup-close {
     position: absolute;

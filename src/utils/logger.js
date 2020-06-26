@@ -1,5 +1,6 @@
 const { Workbook } = require('excel4node');
 const path = require('path');
+const { getFileDate } = require('./others');
 
 let wb,
   ws,
@@ -8,10 +9,11 @@ let wb,
   dataStyle,
   row = 1;
 
-function createFile(fileName, headers) {
-  fileName = fileName;
+function createFile(fn, headers) {
+  fileName = fn + '_' + getFileDate() + '.xlsx';
   wb = new Workbook();
   ws = wb.addWorksheet('Результаты');
+  row = 1;
   if (!headerStyle) createStyles();
   for (let i = 0; i < headers.length; i++) {
     ws.cell(row, i + 1)
@@ -30,9 +32,8 @@ function writeRow(entries) {
   row++;
 }
 
-function saveFile(dir) {
-  wb.write(path.join(dir, fileName));
-  wb = ws = fileName = void 0;
+function saveFile(dir, cb) {
+  wb.write(path.join(dir, fileName), cb);
 }
 
 function createStyles() {

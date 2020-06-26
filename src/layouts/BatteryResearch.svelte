@@ -97,8 +97,8 @@
   }
 
   function startLogging() {
-    const fileName = '';
-    const headers = [];
+    const fileName = 'Battery';
+    const headers = ['Время, с', modeOptions[selectedMode > 1 ? 1 : 2].symbol];
     ipcRenderer.send('startFileWrite', fileName, headers);
     saveDisabled = false;
   }
