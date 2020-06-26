@@ -44,6 +44,12 @@
   function setOutputVoltage(v) {
     ipcRenderer.send('serialCommand', COMMANDS.setVoltage5(v));
   }
+
+  let fruitChannelOn;
+
+  function toggleFruitChannel(e) {
+    fruitChannelOn = e.target.checked;
+  }
 </script>
 
 <CalibrationModal />
@@ -133,7 +139,7 @@
       {/if}
     {/each}
     <div class="input-iv" style="grid-area: iv-6">
-      <div>U, мB = {$IVData.voltage7}</div>
+      <div>U, мB = {fruitChannelOn ? $IVData.voltage7 : (0).toFixed(2)}</div>
     </div>
     <Arrow direction="input" style="grid-area: ico-6" />
     <img
@@ -141,6 +147,7 @@
       alt="fruit"
       src="../app/icons/fruit.svg"
       style="grid-area: ico-6" />
+    <Switch on="вкл" off="выкл" style="grid-area:sw-6" on:change={toggleFruitChannel} />
     <Button on:click={onBack} style="grid-area:back">Назад</Button>
   </main>
 </div>
