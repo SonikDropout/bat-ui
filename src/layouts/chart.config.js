@@ -1,4 +1,4 @@
-module.exports = function config(points, axesLabels) {
+module.exports = function config(points, axes) {
   return {
     type: "line",
     data: {
@@ -11,7 +11,6 @@ module.exports = function config(points, axesLabels) {
       ]
     },
     options: {
-      responsive: false,
       elements: {
         point: {
           radius: 1
@@ -30,7 +29,7 @@ module.exports = function config(points, axesLabels) {
             type: "linear",
             scaleLabel: {
               display: true,
-              labelString: axesLabels.x
+              labelString: axes.x.label
             },
             ticks: {
               maxTickLimit: 8,
@@ -45,10 +44,11 @@ module.exports = function config(points, axesLabels) {
             type: "linear",
             scaleLabel: {
               display: true,
-              labelString: axesLabels.y
+              labelString: axes.y.label
             },
             ticks: {
-              maxTickLimit: 8
+              maxTickLimit: 8,
+              suggestedMax: axes.y.max
             }
           }
         ]

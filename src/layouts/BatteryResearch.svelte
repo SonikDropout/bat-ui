@@ -8,11 +8,7 @@
   import Chart from 'chart.js';
   import zoom from 'chartjs-plugin-zoom';
   import configureChart from './chart.config';
-  import {
-    BATTERY_TYPES,
-    COMMANDS,
-    CONSTRAINTS,
-  } from '../constants';
+  import { BATTERY_TYPES, COMMANDS, CONSTRAINTS } from '../constants';
   import { stateData, IVData, getValue } from '../stores';
   import { onMount } from 'svelte';
   export let onBack;
@@ -21,9 +17,20 @@
     chart = new Chart(
       document.getElementById('chart').getContext('2d'),
       configureChart(points, {
-        x: 't, c',
-        y: modeOptions[selectedMode > 1 ? 1 : 2].symbol,
+        x: { label: 't, c' },
+        y: {
+          label: modeOptions[Math.max(1, selectedMode)].symbol,
+          max:
+            CONSTRAINTS[selectedMode > 1 ? 'batVoltage' : 'batCurrent'][
+              batteryType
+            ][1],
+        },
       })
+    );
+    console.log(
+      CONSTRAINTS[selectedMode > 1 ? 'batVoltage' : 'batCurrent'][
+        batteryType
+      ][1]
     );
     chart.options.onClick = chart.resetZoom;
   });
@@ -150,7 +157,12 @@
   function selectMode(mode) {
     selectedMode = +mode;
     ipcRenderer.send('serialCommand', COMMANDS.setMode6(+mode));
-    chart.options.scales.yAxes[0].scaleLabel.labelString = modeOptions[selectedMode > 1 ? 1 : 2].symbol;
+    chart.options.scales.yAxes[0].scaleLabel.labelString =
+      modeOptions[Math.max(1, selectedMode)].symbol;
+    chart.options.scales.yAxes[0].ticks.suggestedMax =
+      CONSTRAINTS[selectedMode > 1 ? 'batVoltage' : 'batCurrent'][
+        batteryType
+      ][1];
     chart.update();
   }
 
@@ -190,29 +202,33 @@
       options={modeOptions}
       defaultValue={selectedMode}
       onChange={selectMode} />
-    {#if $stateData.type1 && selectedMode}
-      <div class="label-inline">{modeOptions[selectedMode].symbol}</div>
+    {#if $stateData.type1}
+      {#if selectedMode}
+        <div class="label-inline">{modeOptions[selectedMode].symbol}</div>
+        <RangeInput
+          step={0.1}
+          style="grid-column: 2 / 4"
+          onChange={setIV}
+          range={CONSTRAINTS[selectedMode > 1 ? 'batVoltage' : 'batCurrent'][batteryType]} />
+      {/if}
+      <div class="label">Выставить ограничения</div>
+      <Select
+        order={2}
+        style="grid-column: 1 / 4"
+        onChange={setOffMode}
+        options={constraintOptions}
+        defaultValue={selectedConstraint} />
+      <div class="label-inline">
+        {constraintOptions[selectedConstraint].symbol}
+      </div>
       <RangeInput
-        step={0.1}
         style="grid-column: 2 / 4"
-        onChange={setIV}
-        range={CONSTRAINTS[selectedMode > 1 ? 'batVoltage' : 'batCurrent'][batteryType]} />
+        onChange={setConstraint}
+        step={selectedConstraint ? 10 : 0.1}
+        range={offModeConstraint} />
     {:else}
       <div class="spacer" />
     {/if}
-    <div class="label">Выставить ограничения</div>
-    <Select
-      order={2}
-      style="grid-column: 1 / 4"
-      onChange={setOffMode}
-      options={constraintOptions}
-      defaultValue={selectedConstraint} />
-    <div class="label-inline">{constraintOptions[selectedConstraint].symbol}</div>
-    <RangeInput
-      style="grid-column: 2 / 4"
-      onChange={setConstraint}
-      step={selectedConstraint ? 10 : 0.1}
-      range={offModeConstraint} />
     <Button
       style="grid-column: 1 / 3; align-self: start"
       id="onoff"
@@ -233,17 +249,21 @@
       {energyCapacity > 0.001 ? energyCapacity.toPrecision(3) : 0}
     </div>
     <div class="thermo-module">
-      <h4 class="thermo-title">Исследование характеристик АКБ при различных тепературах</h4>
+      <h4 class="thermo-title">
+        Исследование характеристик АКБ при различных тепературах
+      </h4>
       <div class="thermo-controls">
         <div>Модуль термостатирования</div>
         <span>
           T
-          <sub>АКБ</sub> = {$IVData.temp1}&deg;C
+          <sub>АКБ</sub>
+          = {$IVData.temp1}&deg;C
         </span>
         <Toggle on:change={toggleFridge} />
         <span>
           T
-          <sub>внутр</sub> = {$IVData.temp1}&deg;C
+          <sub>внутр</sub>
+          = {$IVData.temp2}&deg;C
         </span>
       </div>
     </div>
@@ -268,7 +288,7 @@
 <style>
   main {
     grid-template-rows: repeat(8, 3.2rem) repeat(2, 5rem) repeat(2, 3.2rem);
-    grid-row-gap: .8rem;
+    grid-row-gap: 0.8rem;
     line-height: 1;
   }
   .label,
@@ -276,6 +296,9 @@
   h3,
   .spacer {
     grid-column: 1 / 5;
+  }
+  .spacer {
+    grid-row: span 3;
   }
   h3 {
     text-align: left;
