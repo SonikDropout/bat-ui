@@ -20,7 +20,7 @@ module.exports = function parse(buf) {
       val = buf.readUInt16BE(i) / 1000;
       val < 0.2 ? '0.00' : val.toFixed(2);
     } else if (j < 7) val = (buf.readUInt16BE(i) / 1000).toFixed(2);
-    else if (j < 20) val = (buf.readInt16BE(i) / 1000).toFixed(2);
+    else if (j < 18) val = (buf.readInt16BE(i) / 1000).toFixed(2);
     else val = (buf.readUInt16BE(i) / 10).toFixed(1);
     result.iv.push(val);
     i += 2;
