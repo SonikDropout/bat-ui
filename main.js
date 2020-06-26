@@ -39,7 +39,8 @@ function initPeripherals(win) {
     .on('remove', () => {
       usbPath = void 0;
       win.webContents.send('usbDisconnected');
-    });
+    })
+    .init();
   serial
     .on('data', (d) => win.webContents.send('serialData', d))
     .once('data', (d) => (initialData = d));

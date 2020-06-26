@@ -83,7 +83,7 @@ function handleRemove() {
 usbPort.init = findDrive;
 
 usbPort.eject = function eject() {
-  exec(`sudo eject ${connectedDevice}`, (err) => {
+  exec(`sudo umount ${connectedDevice}`, (err) => {
     if (err) console.error(err);
     connectedDevice = void 0;
     usbPort.emit('remove');
