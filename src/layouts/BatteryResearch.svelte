@@ -19,9 +19,9 @@
       configureChart(points, {
         x: { label: 't, c' },
         y: {
-          label: modeOptions[Math.max(1, selectedMode)].symbol,
+          label: modeOptions[selectedMode > 1 ? 1 : 2].symbol,
           max:
-            CONSTRAINTS[selectedMode > 1 ? 'batVoltage' : 'batCurrent'][
+            CONSTRAINTS[selectedMode > 1 ? 'batCurrent' : 'batVoltage'][
               batteryType
             ][1],
         },
@@ -158,9 +158,9 @@
     selectedMode = +mode;
     ipcRenderer.send('serialCommand', COMMANDS.setMode6(+mode));
     chart.options.scales.yAxes[0].scaleLabel.labelString =
-      modeOptions[Math.max(1, selectedMode)].symbol;
+      modeOptions[selectedMode > 1 ? 1 : 2].symbol;
     chart.options.scales.yAxes[0].ticks.suggestedMax =
-      CONSTRAINTS[selectedMode > 1 ? 'batVoltage' : 'batCurrent'][
+      CONSTRAINTS[selectedMode > 1 ? 'batCurrent' : 'batVoltage'][
         batteryType
       ][1];
     chart.update();
