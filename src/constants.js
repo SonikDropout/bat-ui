@@ -88,7 +88,7 @@ const VOLTAGE_CONSTRAINTS = [
   [4.0, 6.0],
   [4.0, 6.0],
   [6.0, 7.0],
-  [4.0, 5.4],
+  [4.0, 5.6],
 ];
 
 const CURRENT_CONSTRAINTS = [
