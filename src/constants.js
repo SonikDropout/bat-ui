@@ -92,12 +92,12 @@ const VOLTAGE_CONSTRAINTS = [
 ];
 
 const CURRENT_CONSTRAINTS = [
-  [0, 1],
-  [0, 1],
-  [0, 1],
-  [0, 1],
-  [0, 0.35],
-  [0, 1],
+  [0.1, 1],
+  [0.1, 1],
+  [0.1, 1],
+  [0.1, 1],
+  [0.1, 0.35],
+  [0.1, 1],
 ]
 
 const CONSTRAINTS = {

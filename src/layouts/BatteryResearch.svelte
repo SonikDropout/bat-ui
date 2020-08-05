@@ -98,7 +98,7 @@
 
   function startLogging() {
     const fileName = 'Battery';
-    const headers = ['Время, с', modeOptions[selectedMode > 1 ? 1 : 2].symbol];
+    const headers = ['Время, с', 'U, B', 'I, A'];
     ipcRenderer.send('startFileWrite', fileName, headers);
     saveDisabled = false;
   }
@@ -130,12 +130,15 @@
   }
 
   function getPoint(data) {
+    const current = +data.current6;
+    const voltage = +data.voltage6;
+    const elapsed = Math.round((Date.now() - timeStart) / 1000);
     const row = {
-      x: Math.round((Date.now() - timeStart) / 1000),
-      y: +data[selectedMode > 1 ? 'current6' : 'voltage6'],
+      x: elapsed,
+      y: selectedMode > 1 ? current : voltage,
     };
-    sumCapacity(+data.current6, +data.voltage6);
-    sendToLogger(Object.values(row));
+    sumCapacity(current, voltage);
+    sendToLogger([elapsed, voltage, current]);
     updateChart(row);
   }
 
@@ -210,6 +213,8 @@
           style="grid-column: 2 / 4"
           onChange={setIV}
           range={CONSTRAINTS[selectedMode > 1 ? 'batVoltage' : 'batCurrent'][batteryType]} />
+      {:else}
+        <div class="spacer-sm" />
       {/if}
       <div class="label">Выставить ограничения</div>
       <Select
@@ -294,11 +299,12 @@
   .label,
   h4,
   h3,
-  .spacer {
+  .spacer,
+  .spacer-sm {
     grid-column: 1 / 5;
   }
   .spacer {
-    grid-row: span 3;
+    grid-row: span 4;
   }
   h3 {
     text-align: left;
