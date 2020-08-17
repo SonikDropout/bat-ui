@@ -74,7 +74,7 @@ const COMMANDS = {
 const BATTERY_TYPES = [
   void 0,
   'LiPol',
-  'LiFePО',
+  'LiFePО<sub>4</sub>',
   'NiMH',
   'NiCd',
   'PbPbO',
@@ -92,6 +92,7 @@ const VOLTAGE_CONSTRAINTS = [
 ];
 
 const CURRENT_CONSTRAINTS = [
+  [],
   [0.1, 1],
   [0.1, 1],
   [0.1, 1],

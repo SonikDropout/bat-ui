@@ -195,7 +195,7 @@
   <main>
     <div class="label">Исследуемый тип АКБ</div>
     <h3>
-      {BATTERY_TYPES[$stateData.type1] || 'Подключите батарею к 7 каналу'}
+      {@html BATTERY_TYPES[$stateData.type1] || 'Подключите батарею к 7 каналу'}
     </h3>
     <div class="label">Режим исследования</div>
     <Select

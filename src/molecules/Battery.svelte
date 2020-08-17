@@ -23,7 +23,7 @@
       {#if type}
         <span>U, B = {voltage}</span>
         <span>I, A = {current}</span>
-        <span>{BATTERY_TYPES[type]}</span>
+        <span>{@html BATTERY_TYPES[type]}</span>
         <span>T, &deg;C = {temperature}</span>
       {:else}
         <img src="../app/icons/cross.svg" alt="cross" />
