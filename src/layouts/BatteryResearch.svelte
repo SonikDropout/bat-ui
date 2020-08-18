@@ -220,6 +220,7 @@
           step={0.1}
           style="grid-column: 2 / 4"
           onChange={setIV}
+          defaultValue={0}
           range={CONSTRAINTS[selectedMode > 1 ? 'batVoltage' : 'batCurrent'][batteryType]} />
       {:else}
         <div class="spacer-sm" />
