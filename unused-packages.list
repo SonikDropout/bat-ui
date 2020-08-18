@@ -1,5 +1,5 @@
 dhcpcd.service
-networing.service
+networking.service
 raspi-config.service
 keyboard-setup.service
 triggerhappy.service
