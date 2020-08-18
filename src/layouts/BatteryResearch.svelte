@@ -48,6 +48,9 @@
 
   let selectedMode = $stateData.mode6,
     selectedConstraint = $stateData.offMode6,
+    offLimit = selectedConstraint
+      ? $stateData.timeLimit
+      : $stateData.voltageLimit,
     points = [],
     saveDisabled = true,
     isDrawing,
@@ -64,8 +67,13 @@
     if (state.type1 !== batteryType) batteryType = state.type1;
   });
 
-  $: if (selectedConstraint) offModeConstraint = CONSTRAINTS.offTime;
-  else offModeConstraint = CONSTRAINTS.batVoltage[batteryType] || [3, 6];
+  $: if (selectedConstraint) {
+    offModeConstraint = CONSTRAINTS.offTime;
+    offLimit = $stateData.timeLimit;
+  } else {
+    offModeConstraint = CONSTRAINTS.batVoltage[batteryType] || [3, 6];
+    offLimit = $stateData.voltageLimit;
+  }
 
   $: startDisabled = !$stateData.type1 || !selectedMode.value;
 
@@ -229,7 +237,7 @@
       <RangeInput
         style="grid-column: 2 / 4"
         onChange={setConstraint}
-        defaultValue={selectedConstraint ? $stateData.timeLimit : $stateData.voltageLimit}
+        defaultValue={offLimit}
         step={selectedConstraint ? 10 : 0.1}
         range={offModeConstraint} />
     {:else}
