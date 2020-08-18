@@ -10,8 +10,16 @@
 
   $: min = Math.min.apply(null, range);
   $: max = Math.max.apply(null, range);
+  $: if (max < defaultValue) {
+    onChange(max, name);
+    defaultValue = max;
+  }
+  $: if (min > defaultValue) {
+    onChange(min, name);
+    defaultValue = min;
+  }
   $: precision = -Math.min(+step.toExponential().split('e')[1], 0);
-  $: value = Math.min(Math.max(defaultValue, range[0]), range[1]);
+  $: value = defaultValue;
 
   let timeout,
     interval,
