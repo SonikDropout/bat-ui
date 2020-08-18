@@ -39,6 +39,8 @@ const STATE_DATA = [
   'startStop6',
   'mode6',
   'offMode6',
+  'timeLimit',
+  'voltageLimit'
 ];
 
 const DATA_BYTE_LENGTH =
@@ -63,7 +65,7 @@ const COMMANDS = {
   turnOn6: [64, 0],
   turnOff6: [68, 0],
   setMode6: (v) => [72, v],
-  setLoad6: (v) => [76, v * 100 | 0],
+  setLoad6: (v) => [76, v * 10 | 0],
   setOffMode: (v) => [80, v],
   setMinVoltage6: (v) => [84, 100 + v * 10 | 0],
   setMaxTime6: (v) => [88, v / 10 | 0],

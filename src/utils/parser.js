@@ -26,7 +26,9 @@ module.exports = function parse(buf) {
     i += 2;
   }
   for (let j = 0; j < STATE_DATA.length; j++) {
-    result.state.push(buf[i++]);
+    if (j == STATE_DATA.length - 2) result.state.push(buf[i++] * 10);
+    else if (j == STATE_DATA.length - 1) result.state.push(buf[i++] / 10);
+    else result.state.push(buf[i++]);
   }
   return result;
 };

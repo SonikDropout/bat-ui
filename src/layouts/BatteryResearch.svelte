@@ -229,6 +229,7 @@
       <RangeInput
         style="grid-column: 2 / 4"
         onChange={setConstraint}
+        defaultValue={selectedConstraint ? $stateData.timeLimit : $stateData.voltageLimit}
         step={selectedConstraint ? 10 : 0.1}
         range={offModeConstraint} />
     {:else}

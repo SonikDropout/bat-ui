@@ -4,6 +4,8 @@ const EventEmitter = require('events');
 const serial = new EventEmitter();
 const state = Array(STATE_DATA.length).fill(0);
 state[0] = 1;
+state[state.length - 1] = 4;
+state[state.length - 2] = 40;
 (function loopBatteries() {
   setTimeout(() => {
     state[0] = 0;
