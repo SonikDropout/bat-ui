@@ -107,7 +107,7 @@ const CONSTRAINTS = {
   batCurrent: CURRENT_CONSTRAINTS,
   batVoltage: VOLTAGE_CONSTRAINTS,
   offVoltage: [2, 8],
-  offTime: [10, 500],
+  offTime: [10, 2500],
   voltage: [12, 24],
 };
 
