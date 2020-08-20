@@ -120,13 +120,14 @@
     timeStart = Date.now();
     const unsubscribeIV = IVData.subscribe(getPoint);
     let unsubscribeState = Function.prototype;
-    setTimeout(
+    const stopTimeout = setTimeout(
       () => (unsubscribeState = stateData.subscribe(monitorStop)),
       2500
     );
     unsubscribeData = () => {
       unsubscribeIV();
       unsubscribeState();
+      clearTimeout(stopTimeout);
     };
   }
 
