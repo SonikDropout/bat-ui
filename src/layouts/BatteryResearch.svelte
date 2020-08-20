@@ -61,7 +61,6 @@
     modeConstraint,
     offModeConstraint,
     batteryType,
-    stopWasTriggered,
     timeStart;
 
   stateData.subscribe(state => {
@@ -120,7 +119,11 @@
   function subscribeData() {
     timeStart = Date.now();
     const unsubscribeIV = IVData.subscribe(getPoint);
-    const unsubscribeState = stateData.subscribe(monitorStop);
+    let unsubscribeState = Function.prototype;
+    setTimeout(
+      () => (unsubscribeState = stateData.subscribe(monitorStop)),
+      2500
+    );
     unsubscribeData = () => {
       unsubscribeIV();
       unsubscribeState();
@@ -129,13 +132,8 @@
 
   function monitorStop(state) {
     if (!state.startStop6) {
-      if (stopWasTriggered) {
-        stopDrawing();
-        unsubscribeData();
-        stopWasTriggered = false;
-      } else {
-        stopWasTriggered = true;
-      }
+      stopDrawing();
+      unsubscribeData();
     }
   }
 
