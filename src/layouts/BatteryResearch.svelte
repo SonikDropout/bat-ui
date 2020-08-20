@@ -6,7 +6,6 @@
   import RangeInput from '../molecules/RangeInput';
   import { ipcRenderer } from 'electron';
   import Chart from 'chart.js';
-  import zoom from 'chartjs-plugin-zoom';
   import configureChart from './chart.config';
   import { BATTERY_TYPES, COMMANDS, CONSTRAINTS } from '../constants';
   import { stateData, IVData, getValue } from '../stores';
@@ -32,7 +31,6 @@
         batteryType
       ][1]
     );
-    chart.options.onClick = chart.resetZoom;
   });
 
   const modeOptions = [
@@ -158,8 +156,13 @@
 
   function updateChart(p) {
     points.push(p);
+    if (points.length > 1000) reducePointsAmount();
     chart.data.datasets[0].data = points;
     chart.update();
+  }
+
+  function reducePointsAmount() {
+    points = points.filter((_, i) => i % 2)
   }
 
   function sendToLogger(row) {
