@@ -116,24 +116,7 @@
 
   function subscribeData() {
     timeStart = Date.now();
-    const unsubscribeIV = IVData.subscribe(getPoint);
-    let unsubscribeState = Function.prototype;
-    const stopTimeout = setTimeout(
-      () => (unsubscribeState = stateData.subscribe(monitorStop)),
-      2500
-    );
-    unsubscribeData = () => {
-      unsubscribeIV();
-      unsubscribeState();
-      clearTimeout(stopTimeout);
-    };
-  }
-
-  function monitorStop(state) {
-    if (!state.startStop6) {
-      stopDrawing();
-      unsubscribeData();
-    }
+    const unsubscribeData = IVData.subscribe(getPoint);
   }
 
   function getPoint(data) {
