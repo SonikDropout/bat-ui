@@ -1,6 +1,6 @@
 {
   "name": "bat-ui",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "GUI for battery stand",
   "main": "main.js",
   "scripts": {
