@@ -116,20 +116,20 @@
 
   function subscribeData() {
     timeStart = Date.now();
-    const unsubscribeData = IVData.subscribe(getPoint);
+    unsubscribeData = IVData.subscribe(getPoint);
   }
 
   function getPoint(data) {
     const current = +data.current6;
     const voltage = +data.voltage6;
     const elapsed = Math.round((Date.now() - timeStart) / 1000);
-    const row = {
+    const point = {
       x: elapsed,
       y: selectedMode > 1 ? current : voltage,
     };
     sumCapacity(current, voltage);
     sendToLogger([elapsed, voltage, current]);
-    updateChart(row);
+    updateChart(point);
   }
 
   function sumCapacity(I, V) {
@@ -195,7 +195,7 @@
     <div class="label">Режим исследования</div>
     <Select
       title={!$stateData.type1 ? 'Подключите батарею чтобы выбрать режим исследования' : ''}
-      disabled={!$stateData.type1}
+      disabled={isDrawing}
       style="grid-column: 1/ 5"
       options={modeOptions}
       defaultValue={selectedMode}
