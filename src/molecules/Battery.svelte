@@ -15,15 +15,13 @@
     class="battery"
     style="background: linear-gradient(to top, #1aa2dd 0 {charge}%, white {charge}%
     100%)">
-    <div
-      class="chars"
-      class:black={charge <= 0}
-      style="background-image:linear-gradient(to bottom, #333 0 {100 - charge}%,
-      white {100 - charge}% 100%)">
+    <div class="chars">
       {#if type}
         <span>U, B = {voltage}</span>
         <span>I, A = {current}</span>
-        <span>{@html BATTERY_TYPES[type]}</span>
+        <span>
+          {@html BATTERY_TYPES[type]}
+        </span>
         <span>T, &deg;C = {temperature}</span>
       {:else}
         <img src="../app/icons/cross.svg" alt="cross" />
@@ -35,17 +33,11 @@
 
 <style>
   .chars {
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     font-weight: bold;
-  }
-  .chars.black {
-    background-color: var(--text-color);
   }
   .battery {
     border: 2px solid var(--text-color);
