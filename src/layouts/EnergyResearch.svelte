@@ -22,6 +22,7 @@
   const initialIV = getValue(IVData);
 
   function toggleChannel(e) {
+    if (e.target.name === '5') fithChannelOn = e.target.checked;
     ipcRenderer.send(
       'serialCommand',
       COMMANDS[
@@ -45,7 +46,7 @@
     ipcRenderer.send('serialCommand', COMMANDS.setVoltage5(v));
   }
 
-  let fruitChannelOn;
+  let fruitChannelOn, fithChannelOn;
 
   function toggleFruitChannel(e) {
     fruitChannelOn = e.target.checked;
@@ -120,8 +121,8 @@
             range={[12, 24]}
             defaultValue={+initialIV.voltage5}
             onChange={setOutputVoltage} />
-          <strong>I, A = {$IVData.currentIn5}</strong>
-          <strong>U, B = {$IVData.voltage5}</strong>
+          <strong>I, A = {fithChannelOn ? $IVData.currentIn5 : '0.00'}</strong>
+          <strong>U, B = {fithChannelOn ? $IVData.voltage5 : '0.00'}</strong>
         </div>
         <Arrow direction="output" style="grid-area: ico-5; align-self: start;" />
         <img
