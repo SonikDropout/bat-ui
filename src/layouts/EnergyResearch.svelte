@@ -46,7 +46,7 @@
     ipcRenderer.send('serialCommand', COMMANDS.setVoltage5(v));
   }
 
-  let fruitChannelOn, fithChannelOn;
+  let fruitChannelOn, fithChannelOn = $stateData.onoff5;
 
   function toggleFruitChannel(e) {
     fruitChannelOn = e.target.checked;
