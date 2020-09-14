@@ -4,12 +4,14 @@ const electron = require('electron');
 const logger = require('./src/utils/logger');
 const usbPort = require('./src/utils/usbPort');
 const { IV_DATA, STATE_DATA, IS_RPI: isPi } = require('./src/constants');
+const checkUpdate = require('./src/utils/updater');
 const { app, BrowserWindow, ipcMain } = electron;
 
 const mode = process.env.NODE_ENV;
 
 let win,
   usbPath,
+  updateAvailable,
   initialData = {
     iv: IV_DATA.map((k) => 0),
     state: STATE_DATA.map((k) => 0),
@@ -43,6 +45,11 @@ function initPeripherals(win) {
   serial
     .on('data', (d) => win.webContents.send('serialData', d))
     .once('data', (d) => (initialData = d));
+  checkUpdate().then((isUpdatable) => {
+    if (isUpdatable) win.webContents.send('updateAvailable');
+    updateAvailable = isUpdatable;
+  });
+  ipcMain.on('checkUpdate', (e) => (e.returnValue = updateAvailable));
   ipcMain.on('startFileWrite', (_, ...args) => logger.createFile(...args));
   ipcMain.on('excelRow', (_, ...args) => logger.writeRow(...args));
   ipcMain.on('serialCommand', (_, ...args) => serial.sendCommand(...args));

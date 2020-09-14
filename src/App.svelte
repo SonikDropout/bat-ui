@@ -4,7 +4,12 @@
   import BatteryResearch from './layouts/BatteryResearch';
   import EnergyResearch from './layouts/EnergyResearch';
   import Version from './atoms/Version';
+  import { ipcRenderer } from 'electron';
+  import UpdateModal from './organisms/UpdateModal';
   let state = STATES.initial;
+  let updateAvailable = ipcRenderer.sendSync('checkUpdate');
+
+  ipcRenderer.on('updateAvailable', () => (updateAvailable = true));
 
   function selectResearch(e) {
     state = e.target.value;
@@ -17,4 +22,7 @@
   <EnergyResearch onBack={() => (state = STATES.initial)} />
 {/if}
 <BatteryResearch onBack={() => (state = STATES.initial)} />
+{#if updateAvailable}
+  <UpdateModal />
+{/if}
 <Version />
