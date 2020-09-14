@@ -26,13 +26,13 @@
     showControls = false;
 
   function increment() {
-    if (value + step <= max) {
+    if (value + step <= max + step * 0.1) {
       value = +(value + step).toFixed(precision);
     }
   }
 
   function decrement() {
-    if (value - step >= min) {
+    if (value - step >= min - step * 0.1) {
       value = +(value - step).toFixed(precision);
     }
   }
