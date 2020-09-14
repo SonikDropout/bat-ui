@@ -1,0 +1,1 @@
+while read service; do sudo systemctl disable "${service}"; done < ~/bat-ui/unused-packages.list
