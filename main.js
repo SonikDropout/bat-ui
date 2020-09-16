@@ -45,11 +45,7 @@ function initPeripherals(win) {
   serial
     .on('data', (d) => win.webContents.send('serialData', d))
     .once('data', (d) => (initialData = d));
-  checkUpdate().then((isUpdatable) => {
-    if (isUpdatable) win.webContents.send('updateAvailable');
-    updateAvailable = isUpdatable;
-  });
-  ipcMain.on('checkUpdate', (e) => (e.returnValue = updateAvailable));
+  initUpdater();
   ipcMain.on('startFileWrite', (_, ...args) => logger.createFile(...args));
   ipcMain.on('excelRow', (_, ...args) => logger.writeRow(...args));
   ipcMain.on('serialCommand', (_, ...args) => serial.sendCommand(...args));
@@ -65,6 +61,19 @@ function initPeripherals(win) {
       serial.close();
     },
   };
+}
+
+function initUpdater() {
+  checkUpdate().then((isUpdatable) => {
+    if (isUpdatable) win.webContents.send('updateAvailable');
+    updateAvailable = isUpdatable;
+  });
+  ipcMain.on('checkUpdate', (e) => (e.returnValue = updateAvailable));
+  ipcMain.on('updateProgramm', () =>
+    exec('~/booster-ui/scripts/update.sh', (err) => {
+      if (err) console.error(err.message);
+    })
+  );
 }
 
 function launch() {

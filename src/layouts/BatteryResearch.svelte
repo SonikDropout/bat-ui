@@ -59,7 +59,7 @@
     modeConstraint,
     offModeConstraint,
     batteryType,
-    timeStart;
+    elapsed;
 
   stateData.subscribe(state => {
     if (state.type1 !== batteryType) batteryType = state.type1;
@@ -115,14 +115,14 @@
   }
 
   function subscribeData() {
-    timeStart = Date.now();
+    elapsed = 0;
     unsubscribeData = IVData.subscribe(getPoint);
   }
 
   function getPoint(data) {
     const current = +data.current6;
     const voltage = +data.voltage6;
-    const elapsed = Math.round((Date.now() - timeStart) / 1000);
+    elapsed++;
     const point = {
       x: elapsed,
       y: selectedMode > 1 ? current : voltage,
