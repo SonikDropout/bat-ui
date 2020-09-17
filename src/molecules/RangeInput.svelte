@@ -7,6 +7,9 @@
   export let type;
   export let style;
   export let step = 1;
+  import {debounce} from '../utils/others';
+
+  $: debouncedOnChange = debounce(onChange, 300);
 
   $: min = Math.min.apply(null, range);
   $: max = Math.max.apply(null, range);
@@ -59,7 +62,7 @@
     if (timeout) clearTimeout(timeout);
     if (interval) clearInterval(interval);
     e.target.releasePointerCapture(e.pointerId);
-    onChange(value, name);
+    debouncedOnChange(value, name);
   }
 </script>
 

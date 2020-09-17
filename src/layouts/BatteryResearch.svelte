@@ -122,9 +122,8 @@
   function getPoint(data) {
     const current = +data.current6;
     const voltage = +data.voltage6;
-    elapsed++;
     const point = {
-      x: elapsed,
+      x: elapsed++,
       y: selectedMode > 1 ? current : voltage,
     };
     sumCapacity(current, voltage);
