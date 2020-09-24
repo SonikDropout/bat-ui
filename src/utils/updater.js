@@ -9,7 +9,7 @@ const { exec } = require('child_process');
 const { ipcMain } = require('electron');
 
 const winGetBranch = 'git branch --show-current';
-const linuxGetBranch = 'cd ~/booster-ui && git rev-parse --abbrev-ref HEAD';
+const linuxGetBranch = `cd ~/${packageName} && git rev-parse --abbrev-ref HEAD`;
 
 function httpsGet(options) {
   return new Promise((resolve, reject) => {
