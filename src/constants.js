@@ -44,7 +44,7 @@ const STATE_DATA = [
 ];
 
 const DATA_BYTE_LENGTH =
-  IV_DATA.length * 2 + STATE_DATA.length + SEPARATORS.length;
+  IV_DATA.length * 2 + STATE_DATA.length + SEPARATORS.length + 2;
 
 const COMMANDS = {
   turnOff: [4, 0],
