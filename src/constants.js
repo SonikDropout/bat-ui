@@ -39,6 +39,7 @@ const STATE_DATA = [
   'startStop6',
   'mode6',
   'offMode6',
+  'onoff7',
   'timeLimit',
   'voltageLimit'
 ];
