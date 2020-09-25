@@ -41,7 +41,7 @@ module.exports = function parse(buf) {
     else result.state.push(buf[i++]);
   }
   if (checkSum != buf.readUInt16BE(i)) {
-    throw new Error(
+    console.error(
       `Check sums don't match! Calculated: ${checkSum}, recieved: ${buf.readUInt16BE(
         i
       )}`
