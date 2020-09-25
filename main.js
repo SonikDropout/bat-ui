@@ -69,11 +69,6 @@ function initUpdater() {
     updateAvailable = isUpdatable;
   });
   ipcMain.on('checkUpdate', (e) => (e.returnValue = updateAvailable));
-  ipcMain.on('updateProgramm', () =>
-    exec('~/booster-ui/scripts/update.sh', (err) => {
-      if (err) console.error(err.message);
-    })
-  );
 }
 
 function launch() {

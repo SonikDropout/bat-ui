@@ -3,7 +3,11 @@
   import Button from '../atoms/Button';
   import Spinner from '../atoms/Spinner';
   let showModal = true,
-    isUpdating;
+    isUpdating,
+    isError;
+  ipcRenderer.on('updateError', err => {
+    isError = true;
+  });
   function startUpdate() {
     ipcRenderer.send('updateProgramm');
     isUpdating = true;
@@ -17,9 +21,17 @@
   <div class="modal">
     <div class="modal-body">
       <h2>
-        {#if !isUpdating}Доступно обновление!{:else}Обновление программы...{/if}
+        {#if isError}
+          Не удалось обновить программу
+        {:else if isUpdating}
+          Обновление программы...
+        {:else}Доступно обновление!{/if}
       </h2>
-      {#if isUpdating}
+      {#if isError}
+        <div class="buttons">
+          <Button on:click={closeModal}>Закрыть</Button>
+        </div>
+      {:else if isUpdating}
         <Spinner size="lg" />
       {:else}
         <p>Обновить сейчас?</p>
