@@ -54,9 +54,9 @@
     chargeCapacity = 0,
     energyCapacity = 0,
     modeConstraint,
-    offModeConstraint,
     monitorTimeout,
-    batteryType,
+    batteryType = $stateData.type1,
+    offModeConstraint = selectedConstraint ? CONSTRAINTS.batVoltage[batteryType] : CONSTRAINTS.offTime,
     elapsed;
 
   stateData.subscribe(state => {
@@ -84,6 +84,7 @@
     batteryType = $stateData.type1;
     chargeCapacity = 0;
     energyCapacity = 0;
+     if (!selectedConstraint) offModeConstraint = CONSTRAINTS.batVoltage[batteryType],
   }
 
   $: startDisabled = !$stateData.type1 || !selectedMode.value;

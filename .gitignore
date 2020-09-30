@@ -3,3 +3,4 @@ dist
 app/svelte.css
 app/renderer.js
 battery-raspbian*
+*.log
