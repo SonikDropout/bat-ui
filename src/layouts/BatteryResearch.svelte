@@ -54,6 +54,7 @@
     saveDisabled = true,
     isDrawing,
     unsubscribeData = () => {},
+    unsubscribeStop = () => {},
     chart,
     chargeCapacity = 0,
     energyCapacity = 0,
@@ -65,10 +66,22 @@
 
   stateData.subscribe(state => {
     if (state.rebooted == 154) {
-      selectedConstraint = state.offMode6;
-      offLimit = selectedConstraint ? state.timeLimit : state.voltageLimit;
-      selectedMode = state.mode6;
-      defaultLoad = $IVData.setLoad7;
+      ipcRenderer.send('serialCommand', COMMANDS.setLoad6(defaultLoad));
+      ipcRenderer.send(
+        'serialCommand',
+        COMMANDS.setOffMode(selectedConstraint)
+      );
+      ipcRenderer.send(
+        'serialCommand',
+        selectedConstraint
+          ? COMMANDS.setMinVoltage6(offLimit)
+          : COMMANDS.setMaxTime6(offLimit)
+      );
+      ipcRenderer.send('serialCommand', COMMANDS.setMode6(selectedMode));
+      ipcRenderer.send(
+        'serialCommand',
+        isDrawing ? COMMANDS.trunOn6 : COMMANDS.turnOff6
+      );
     }
   });
 
@@ -151,8 +164,9 @@
   }
 
   function monitorStop() {
-    const unsubscribeStop = stateData.subscribe(state => {
-      if (!state.startStop6) {
+    unsubscribeStop();
+    unsubscribeStop = stateData.subscribe(state => {
+      if (!state.startStop6 && state.rebooted != 154) {
         stopDrawing();
         unsubscribeData();
         unsubscribeStop();
@@ -177,6 +191,7 @@
   }
 
   function setIV(val) {
+    defaultLoad = val;
     ipcRenderer.send('serialCommand', COMMANDS.setLoad6(val));
   }
 
@@ -199,6 +214,7 @@
   }
 
   function setConstraint(val) {
+    offLimit = val;
     ipcRenderer.send(
       'serialCommand',
       COMMANDS[`set${selectedConstraint ? 'MaxTime' : 'MinVoltage'}6`](val)
