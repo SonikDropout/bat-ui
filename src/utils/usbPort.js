@@ -8,7 +8,7 @@ const winFindCmd = 'wmic logicaldisk where drivetype=2 get Name';
 const linuxFindCmd = 'lsblk --json -o name,path,rm,mountpoint --tree';
 let connectedDevice;
 
-const debouncedFindDrive = debounce(findDrive, 1000);
+const debouncedFindDrive = debounce(findDrive, 2000);
 
 usbDetect.startMonitoring();
 usbDetect.on('add', debouncedFindDrive);
