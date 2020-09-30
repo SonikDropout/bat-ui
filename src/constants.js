@@ -24,6 +24,7 @@ const IV_DATA = [
   'temp1',
   'temp2',
   'voltage7',
+  'setLoad7',
 ].flat(2);
 
 const STATE_DATA = [

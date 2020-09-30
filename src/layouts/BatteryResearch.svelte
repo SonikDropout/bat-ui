@@ -49,6 +49,7 @@
     offLimit = selectedConstraint
       ? $stateData.timeLimit
       : $stateData.voltageLimit,
+    defaultLoad = $IVData.setLoad7,
     points = [],
     saveDisabled = true,
     isDrawing,
@@ -67,6 +68,7 @@
       selectedConstraint = state.offMode6;
       offLimit = selectedConstraint ? state.timeLimit : state.voltageLimit;
       selectedMode = state.mode6;
+      defaultLoad = $IVData.setLoad7;
     }
   });
 
@@ -232,7 +234,7 @@
           step={0.1}
           style="grid-column: 2 / 4"
           onChange={setIV}
-          defaultValue={0}
+          defaultValue={defaultLoad}
           range={CONSTRAINTS[selectedMode > 1 ? 'batVoltage' : 'batCurrent'][batteryType]} />
       {:else}
         <div class="spacer-sm" />
