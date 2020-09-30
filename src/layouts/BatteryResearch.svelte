@@ -58,20 +58,19 @@
     energyCapacity = 0,
     modeConstraint,
     offModeConstraint,
+    monitorTimeout,
     batteryType,
     elapsed;
 
   stateData.subscribe(state => {
-    if (state.type1 !== batteryType) batteryType = state.type1;
+    if (state.rebooted == 154) {
+      selectedConstraint = state.offMode6;
+      offLimit = selectedConstraint ? state.timeLimit : state.voltageLimit;
+      selectedMode = state.mode6;
+    }
   });
 
-  $: if (selectedConstraint) {
-    offModeConstraint = CONSTRAINTS.offTime;
-    offLimit = $stateData.timeLimit;
-  } else {
-    offModeConstraint = CONSTRAINTS.batVoltage[batteryType] || [3, 6];
-    offLimit = $stateData.voltageLimit;
-  }
+  $: if ($stateData.type1 !== batteryType) batteryType = $stateData.type1;
 
   $: startDisabled = !$stateData.type1 || !selectedMode.value;
 
@@ -87,6 +86,7 @@
     ipcRenderer.send('serialCommand', COMMANDS.turnOff6);
     unsubscribeData();
     stopDrawing();
+    clearTimeout(monitorTimeout);
   }
 
   function startResearch() {
@@ -94,6 +94,7 @@
     startDrawing();
     startLogging();
     subscribeData();
+    monitorTimeout = setTimeout(monitorStop, 3000);
   }
 
   function startDrawing() {
@@ -144,7 +145,17 @@
   }
 
   function reducePointsAmount() {
-    points = points.filter((_, i) => i % 2)
+    points = points.filter((_, i) => i % 2);
+  }
+
+  function monitorStop() {
+    const unsubscribeStop = stateData.subscribe(state => {
+      if (!state.startStop6) {
+        stopDrawing();
+        unsubscribeData();
+        unsubscribeStop();
+      }
+    });
   }
 
   function sendToLogger(row) {
@@ -166,10 +177,25 @@
   function setIV(val) {
     ipcRenderer.send('serialCommand', COMMANDS.setLoad6(val));
   }
+
   function setOffMode(mode) {
-    selectedConstraint = +mode;
-    ipcRenderer.send('serialCommand', COMMANDS.setOffMode(+mode));
+    if (selectedConstraint !== +mode) {
+      selectedConstraint = +mode;
+      ipcRenderer.send('serialCommand', COMMANDS.setOffMode(+mode));
+      changeOffMode();
+    }
   }
+
+  function changeOffMode() {
+    if (selectedConstraint) {
+      offModeConstraint = CONSTRAINTS.offTime;
+      offLimit = $stateData.timeLimit;
+    } else {
+      offModeConstraint = CONSTRAINTS.batVoltage[batteryType] || [3, 6];
+      offLimit = $stateData.voltageLimit;
+    }
+  }
+
   function setConstraint(val) {
     ipcRenderer.send(
       'serialCommand',

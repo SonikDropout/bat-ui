@@ -41,7 +41,8 @@ const STATE_DATA = [
   'offMode6',
   'onoff7',
   'timeLimit',
-  'voltageLimit'
+  'voltageLimit',
+  'rebooted'
 ];
 
 const DATA_BYTE_LENGTH =

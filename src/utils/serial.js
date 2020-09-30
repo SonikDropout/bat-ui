@@ -30,16 +30,12 @@ let commandQueue = [];
 let portBusy = false;
 
 function sendCommand([byte1, byte2]) {
-  let lastCommand = commandQueue[commandQueue.length - 1];
-  if (!lastCommand || (lastCommand[1] !== byte1 && lastCommand[2] !== byte2))
-    commandQueue.push(Buffer.from([20, byte1, byte2, byte1 + byte2 + 20]));
+  commandQueue.push(Buffer.from([20, byte1, byte2, byte1 + byte2 + 20]));
   if (!portBusy) {
     portBusy = true;
     writeCommandFromQueue();
   }
 }
-
-let failedAttempts = 0;
 
 function writeCommandFromQueue() {
   if (!commandQueue.length) {
@@ -51,11 +47,11 @@ function writeCommandFromQueue() {
   serial.write(cmd);
   serial.once('data', (buf) => {
     console.log('Recieved answer:', buf);
-    if (!buf.toString('ascii').includes('ok') && failedAttempts < 2) {
+    if (!buf.toString('ascii').includes('ok')) {
       commandQueue.unshift(cmd);
       failedAttempts++;
-    } else failedAttempts = 0;
-    writeCommandFromQueue();
+    }
+    setTimeout(writeCommandFromQueue, 250);
   });
 }
 
