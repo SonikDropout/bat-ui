@@ -26,11 +26,6 @@
         },
       })
     );
-    console.log(
-      CONSTRAINTS[selectedMode > 1 ? 'batVoltage' : 'batCurrent'][
-        batteryType
-      ][1]
-    );
   });
 
   const modeOptions = [
@@ -210,7 +205,7 @@
       offModeConstraint = CONSTRAINTS.offTime;
       offLimit = $stateData.timeLimit;
     } else {
-      offModeConstraint = CONSTRAINTS.batVoltage[batteryType] || [3, 6];
+      offModeConstraint = CONSTRAINTS.batVoltage[batteryType];
       offLimit = $stateData.voltageLimit;
     }
   }
