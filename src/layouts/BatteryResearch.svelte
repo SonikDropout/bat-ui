@@ -85,7 +85,11 @@
     }
   });
 
-  $: if ($stateData.type1 !== batteryType) batteryType = $stateData.type1;
+  $: if ($stateData.type1 !== batteryType) {
+    batteryType = $stateData.type1;
+    chargeCapacity = 0;
+    energyCapacity = 0;
+  }
 
   $: startDisabled = !$stateData.type1 || !selectedMode.value;
 
@@ -114,8 +118,6 @@
 
   function startDrawing() {
     isDrawing = true;
-    chargeCapacity = 0;
-    energyCapacity = 0;
   }
 
   function startLogging() {
@@ -260,6 +262,7 @@
         order={2}
         style="grid-column: 1 / 4"
         onChange={setOffMode}
+        disabled={isDrawing}
         options={constraintOptions}
         defaultValue={selectedConstraint} />
       <div class="label-inline">
