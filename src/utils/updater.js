@@ -60,7 +60,7 @@ module.exports = async function checkVersions() {
 };
 
 ipcMain.on('updateProgramm', (e) => {
-  exec(`/home/pi/${packageName}/scripts/update`, (err) => {
+  exec(`/home/pi/${packageName}/scripts/update.sh`, (err) => {
     if (err) {
       e.reply('updateError', err);
       console.error(err);
