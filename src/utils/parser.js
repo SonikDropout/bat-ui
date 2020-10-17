@@ -36,8 +36,8 @@ module.exports = function parse(buf) {
   }
   for (let j = 0; j < STATE_DATA.length; j++) {
     checkSum += buf[i];
-    if (j == STATE_DATA.length - 2) result.state.push(buf[i++] * 10);
-    else if (j == STATE_DATA.length - 1) result.state.push(buf[i++] / 10);
+    if (j == STATE_DATA.indexOf('timeLimit')) result.state.push(buf[i++] * 10);
+    else if (j == STATE_DATA.indexOf('voltageLimit')) result.state.push(buf[i++] / 10);
     else result.state.push(buf[i++]);
   }
   if (checkSum != buf.readUInt16BE(i)) {
