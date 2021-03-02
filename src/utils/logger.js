@@ -1,73 +1,67 @@
-const { Workbook } = require('excel4node');
 const path = require('path');
-const { getFileDate } = require('./others');
+const ExcelJS = require('exceljs');
+const { writeFile } = require('fs');
 
-let wb,
-  ws,
-  fileName,
-  headerStyle,
-  dataStyle,
-  row = 1;
+let file = {};
+let fileIdx = 1;
 
-function createFile(fn, headers) {
-  fileName = fn + '_' + getFileDate() + '.xlsx';
-  wb = new Workbook();
-  ws = wb.addWorksheet('Результаты');
-  row = 1;
-  if (!headerStyle) createStyles();
-  for (let i = 0; i < headers.length; i++) {
-    ws.cell(row, i + 1)
-      .string(headers[i])
-      .style(headerStyle);
-  }
-  row++;
+function createFile(name, headers) {
+  const wb = new ExcelJS.Workbook();
+  const ws = wb.addWorksheet('Results');
+  ws.columns = headers.map((header) => ({ header, width: header.length + 2 }));
+  file = {
+    name,
+    wb,
+    ws,
+  };
 }
 
 function writeRow(entries) {
-  for (let i = 0; i < entries.length; i++) {
-    ws.cell(row, i + 1)
-      .number(entries[i])
-      .style(dataStyle);
-  }
-  row++;
+  file.ws.addRow(entries);
 }
 
 function saveFile(dir, cb) {
-  wb.write(path.join(dir, fileName), cb);
+  stylizeSheet(file.ws);
+  file.wb.xlsx
+    .writeBuffer()
+    .then((blob) =>
+      writeFile(
+        path.join(dir, `${file.name}_${fileIdx++}.xlsx`),
+        blob,
+        cb
+      )
+    );
 }
 
-function createStyles() {
-  headerStyle = wb.createStyle({
-    font: {
-      bold: true,
-      color: 'ffffff',
-    },
-    fill: {
+function stylizeSheet(ws) {
+  var borderline = { style: 'thin' };
+  var borderStyle = {
+    top: borderline,
+    left: borderline,
+    bottom: borderline,
+    right: borderline,
+  };
+
+  rows = ws.getRows(2, ws.rowCount - 1);
+  rows.forEach((r) => {
+    for (let c = 1; c <= ws.columnCount; c++) {
+      let cell = r.getCell(c);
+      cell.border = borderStyle;
+      cell.font = { name: 'Arial', size: 10, bold: false };
+    }
+  });
+
+  headerRow = ws.getRow(1);
+  for (let c = 1; c <= ws.columnCount; c++) {
+    let cell = headerRow.getCell(c);
+    cell.font = { name: 'Arial', size: 10, bold: true };
+    cell.fill = {
       type: 'pattern',
-      patternType: 'solid',
-      fgColor: '8bc041',
-    },
-  });
-  headerStyle.border = generateBorders();
-  dataStyle = wb.createStyle({
-    alignment: {
-      horizontal: 'right',
-    },
-  });
-  dataStyle.border = generateBorders();
-}
-
-function generateBorders() {
-  return ['left', 'right', 'top', 'bottom'].reduce(
-    (acc, key) => {
-      acc[key] = {
-        style: 'thin',
-        color: 'black',
-      };
-      return acc;
-    },
-    { outline: false }
-  );
+      pattern: 'darkVertical',
+      fgColor: { argb: 'FFc0c0c0' },
+    };
+    cell.border = borderStyle;
+  }
 }
 
 module.exports = {

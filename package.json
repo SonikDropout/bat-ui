@@ -39,7 +39,7 @@
     "chart.js": "^2.9.3",
     "chartjs-plugin-zoom": "^0.7.5",
     "drivelist": "^8.0.9",
-    "excel4node": "^1.7.2",
+    "exceljs": "^4.2.0",
     "serialport": "^8.0.7",
     "usb-detection": "^4.7.0"
   },

@@ -1,6 +1,5 @@
 <script>
   import Button from '../atoms/Button';
-  export let logId;
   export let style;
   import { __ } from '../utils/translations';
   import { ipcRenderer } from 'electron';
@@ -12,7 +11,7 @@
     isActive = true,
     usbConnected;
 
-  ipcRenderer.send('usbStorageRequest');
+  ipcRenderer.send('usbStatusRequest');
 
   ipcRenderer
     .on('usbConnected', () => (usbConnected = true))
@@ -24,8 +23,8 @@
   function handleClick() {
     isActive = false;
     isSaving = true;
-    ipcRenderer.send('saveFile', logId);
-    ipcRenderer.on(logId + 'Saved', handleSaved);
+    ipcRenderer.send('saveFile');
+    ipcRenderer.on('fileSaved', handleSaved);
   }
   function handleSaved(e, err) {
     if (err) {
@@ -50,7 +49,7 @@
 <Button
   {style}
   on:click={handleClick}
-  disabled={!logId || !isActive || !usbConnected}>
+  disabled={!isActive || !usbConnected}>
   {#if isSaving}
     <span class="spinner" />
     {$__('saving file')}
@@ -60,7 +59,7 @@
 {#if saveMessage}
   <div class="popup" transition:fly={{ y: -200 }}>
     <span on:click={closePopup} class="popup-close">x</span>
-    <p>{$__(saveMessage)}</p>
+    <p class:error={isSaveFailed}>{$__(saveMessage)}</p>
     <Button on:click={ejectUSB} size="sm">{$__('eject')}</Button>
   </div>
 {/if}
@@ -92,5 +91,8 @@
     top: 2rem;
     right: 2rem;
     color: var(--coporate-grey-darken);
+  }
+  .error {
+    color: var(--danger-color);
   }
 </style>
