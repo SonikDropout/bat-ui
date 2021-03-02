@@ -10,6 +10,7 @@
   import { BATTERY_TYPES, COMMANDS, CONSTRAINTS } from '../constants';
   import { stateData, IVData, getValue } from '../stores';
   import { onMount } from 'svelte';
+  import { __ } from '../utils/translations';
   export let onBack;
 
   onMount(() => {
@@ -29,14 +30,14 @@
   });
 
   const modeOptions = [
-    { label: 'режим не выбран', value: 0 },
-    { label: 'по постоянному току', value: 1, symbol: 'I, A' },
-    { label: 'по постоянному напряжению', value: 2, symbol: 'U, B' },
+    { label: 'select mode', value: 0 },
+    { label: 'constant current', value: 1, symbol: 'I, A' },
+    { label: 'constant voltage', value: 2, symbol: 'U, V' },
   ];
 
   const constraintOptions = [
-    { label: 'по напряжению', value: 0, symbol: 'U, B' },
-    { label: 'по времени', value: 1, symbol: 't, c' },
+    { label: 'voltage constraint', value: 0, symbol: 'U, V' },
+    { label: 'time constraint', value: 1, symbol: 't, s' },
   ];
 
   let selectedMode = $stateData.mode6,
@@ -121,7 +122,7 @@
 
   function startLogging() {
     const fileName = 'Battery';
-    const headers = ['Время, с', 'U, B', 'I, A'];
+    const headers = ['Time, s', 'U, V', 'I, A'];
     ipcRenderer.send('startFileWrite', fileName, headers);
     saveDisabled = false;
   }
@@ -230,15 +231,15 @@
 </script>
 
 <div class="layout">
-  <header>Исследование основных характеристик аккумуляторных батарей</header>
+  <header>{$__('study batteries characteristics')}</header>
   <main>
-    <div class="label">Исследуемый тип АКБ</div>
+    <div class="label">{$__('battery type')}</div>
     <h3>
-      {@html BATTERY_TYPES[$stateData.type1] || 'Подключите батарею к 7 каналу'}
+      {@html BATTERY_TYPES[$stateData.type1] || $__('please connect to 7 channel')}
     </h3>
-    <div class="label">Режим исследования</div>
+    <div class="label">{$__('study mode')}</div>
     <Select
-      title={!$stateData.type1 ? 'Подключите батарею чтобы выбрать режим исследования' : ''}
+      title={!$stateData.type1 ? $__('please connect the battery') : ''}
       disabled={isDrawing}
       style="grid-column: 1/ 5"
       options={modeOptions}
@@ -256,7 +257,7 @@
       {:else}
         <div class="spacer-sm" />
       {/if}
-      <div class="label">Выставить ограничения</div>
+      <div class="label">{$__('set constraints')}</div>
       <Select
         order={2}
         style="grid-column: 1 / 4"
@@ -280,36 +281,34 @@
       style="grid-column: 1 / 3; align-self: start"
       id="onoff"
       on:click={toggleResearch}>
-      {isDrawing ? 'Стоп' : 'Старт'}
+      {isDrawing ? $__( 'stop' ) : $__( 'start' )}
     </Button>
-    <h4>Полученные характеристики</h4>
-    <div class="char-label">U, B</div>
+    <h4>{$__('obtained characteristics')}</h4>
+    <div class="char-label">U, {$__('V')}</div>
     <div class="char-value">{$IVData.voltage6}</div>
-    <div class="char-label second">Q, А*ч</div>
+    <div class="char-label second">Q, {$__('A*h') }</div>
     <div class="char-value second">
       {chargeCapacity > 0.001 ? chargeCapacity.toPrecision(3) : 0}
     </div>
-    <div class="char-label">I, A</div>
+    <div class="char-label">I, { $__('A') }</div>
     <div class="char-value">{$IVData.current6}</div>
-    <div class="char-label second">E, Вт*ч</div>
+    <div class="char-label second">E, {$__('W*h')}</div>
     <div class="char-value second">
       {energyCapacity > 0.001 ? energyCapacity.toPrecision(3) : 0}
     </div>
     <div class="thermo-module">
-      <h4 class="thermo-title">
-        Исследование характеристик АКБ при различных тепературах
-      </h4>
+      <h4 class="thermo-title">{$__('study different temperatures')}</h4>
       <div class="thermo-controls">
-        <div>Модуль термостатирования</div>
+        <div>{$__('thermo module')}</div>
         <span>
           T
-          <sub>АКБ</sub>
+          <sub>{$__('battery')}</sub>
           = {$IVData.temp1}&deg;C
         </span>
         <Toggle on:change={toggleFridge} />
         <span>
           T
-          <sub>внутр</sub>
+          <sub>{$__('internal')}</sub>
           = {$IVData.temp2}&deg;C
         </span>
       </div>
@@ -322,13 +321,11 @@
       disabled={isDrawing}
       style="grid-area: 11 / 5 / 13 / 7; align-self: end"
       id="back">
-      Назад
+      {$__('back')}
     </Button>
     <SaveButton
       style="grid-area: 11 / 7 / 13 / 13; align-self: end"
-      disabled={saveDisabled}>
-      Запись данных на usb-устройство
-    </SaveButton>
+      disabled={saveDisabled} />
   </main>
 </div>
 

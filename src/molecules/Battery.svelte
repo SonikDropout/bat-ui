@@ -1,5 +1,6 @@
 <script>
   import { BATTERY_TYPES } from '../constants';
+  import {__} from '../utils/translations';
   export let current;
   export let voltage;
   export let type;
@@ -25,7 +26,7 @@
         <span>T, &deg;C = {temperature}</span>
       {:else}
         <img src="../app/icons/cross.svg" alt="cross" />
-        <span class="noop">н/д</span>
+        <span class="noop">{$__('empty')}</span>
       {/if}
     </div>
   </div>

@@ -1,14 +1,16 @@
 <script>
+  import {__} from '../utils/translations';
   export let checked;
   export let value;
   export let name;
   export let disabled;
+  export let style;
 </script>
 
-<label>
+<label {style}>
   <slot />
   <input type="checkbox" {value} {name} on:change bind:checked {disabled} />
-  <span class:disabled class:checked>{checked ? 'вкл' : 'выкл'}</span>
+  <span class:disabled class:checked>{checked ? $__('on') : $__('off')}</span>
 </label>
 
 <style>

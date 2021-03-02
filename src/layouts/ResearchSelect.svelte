@@ -1,6 +1,7 @@
 <script>
   import { STATES } from '../constants';
   import { slide } from '../transitions';
+  import { __ } from '../utils/translations';
   const slideLeft = slide('left');
   const slideRight = slide('right');
 </script>
@@ -8,13 +9,23 @@
 <main>
   <label class="area" transition:slideLeft>
     <img src="../app/icons/energy.svg" alt="energy" />
-    <p>Исследование по преобразованию и коммутации энергии</p>
-    <input type="radio" class="hidden" name="appState" value={STATES.energy} on:change />
+    <p>{$__('study energy conversion')}</p>
+    <input
+      type="radio"
+      class="hidden"
+      name="appState"
+      value={STATES.energy}
+      on:change />
   </label>
   <label class="area" transition:slideRight>
-    <img src="../app/icons/battery.svg" alt="battery" class="bat-icon"/>
-    <p>Исследование основных характеристик аккумуляторных батарей</p>
-    <input type="radio" class="hidden" name="appState" value={STATES.battery} on:change />
+    <img src="../app/icons/battery.svg" alt="battery" class="bat-icon" />
+    <p>{$__('study batteries characteristics')}</p>
+    <input
+      type="radio"
+      class="hidden"
+      name="appState"
+      value={STATES.battery}
+      on:change />
   </label>
 </main>
 

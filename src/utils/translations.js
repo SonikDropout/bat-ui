@@ -1,26 +1,45 @@
-const fs = require('fs');
-const settings = require('../../settings.json');
-const translations = require(`../../locale/${settings.locale || 'ru'}.json`);
+const { derived, writable } = require('svelte/store');
 
-module.exports = {
-  translations,
-  init({ win }) {
-    this.windowRef = win;
-  },
+class Translator {
+  constructor() {
+    this.dictionary = {};
+    this.stores = {};
+    this.locale = writable();
+    this.lng = '';
+    this.__ = derived(this.locale, () => this.t.bind(this));
+  }
+  addMessages(lng, dic) {
+    this.dictionary[lng] = dic;
+  }
+  setLocale(lng) {
+    this._checkLocaleExists(lng);
+    this.lng = lng;
+    this.locale.set(lng);
+  }
   changeLocale(newLocale) {
-    settings.locale = newLocale;
-    fs.writeFile(
-      '../../settings.json',
-      JSON.stringify(settings),
-      Function.prototype
-    );
-    this.translations = require(`../../locale/${newLocale}.json`);
-    if (this.windowRef) this.windowRef.reload();
-  },
+    this._checkLocaleExists(newLocale);
+    this.locale.set(newLocale);
+    this.lng = newLocale;
+  }
   t(key) {
     return (
-      key.split('.').reduce((tr, k) => tr[k] || {}, this.translations) ||
-      'no translation'
+      key
+        .split('.')
+        .reduce(
+          (dictionary, key) => dictionary[key],
+          this.dictionary[this.lng]
+        ) || key
     );
-  },
-};
+  }
+  _checkLocaleExists(lng) {
+    if (!this.dictionary[lng])
+      throw new Error(`No translations loaded for ${lng}!`);
+  }
+}
+
+const translator = new Translator();
+translator.addMessages('ru', require('../../locale/ru.json'));
+translator.addMessages('en', require('../../locale/en.json'));
+translator.setLocale('ru');
+
+module.exports = translator;

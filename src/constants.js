@@ -79,7 +79,7 @@ const COMMANDS = {
 const BATTERY_TYPES = [
   void 0,
   'LiPol',
-  'LiFePО<sub>4</sub>',
+  'LiFePO<sub>4</sub>',
   'NiMH',
   'NiCd',
   'PbPbO',

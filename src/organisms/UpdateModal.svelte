@@ -2,6 +2,7 @@
   import { ipcRenderer } from 'electron';
   import Button from '../atoms/Button';
   import Spinner from '../atoms/Spinner';
+  import {__} from '../utils/translations';
   let showModal = true,
     isUpdating,
     isError;
@@ -22,22 +23,22 @@
     <div class="modal-body">
       <h2>
         {#if isError}
-          Не удалось обновить программу
+          {$__('update failed')}
         {:else if isUpdating}
-          Обновление программы...
-        {:else}Доступно обновление!{/if}
+          {$__('updating')}
+        {:else}{$__('update available')}{/if}
       </h2>
       {#if isError}
         <div class="buttons">
-          <Button on:click={closeModal}>Закрыть</Button>
+          <Button on:click={closeModal}>{$__('close')}</Button>
         </div>
       {:else if isUpdating}
         <Spinner size="lg" />
       {:else}
-        <p>Обновить сейчас?</p>
+        <p>{$__('update?')}</p>
         <div class="buttons">
-          <Button on:click={startUpdate}>Да</Button>
-          <Button on:click={closeModal}>Нет</Button>
+          <Button on:click={startUpdate}>{$__('yes')}</Button>
+          <Button on:click={closeModal}>{$__('no')}</Button>
         </div>
       {/if}
 

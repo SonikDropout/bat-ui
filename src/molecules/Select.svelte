@@ -1,5 +1,6 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
+  import { __ } from '../utils/translations';
   export let onChange;
   export let options;
   export let disabled;
@@ -16,7 +17,7 @@
   }
 
   let selected = options.find(o => o.value === defaultValue) || {
-    label: '-- не выбрано --',
+    label: '-- select --',
   };
 
   let optionsVisible = false,
@@ -45,7 +46,7 @@
   }
 </script>
 
-<div class="select-wrapper" {style}> 
+<div class="select-wrapper" {style}>
   <div
     {title}
     class="select"
@@ -54,7 +55,7 @@
     class:disabled
     class:active
     class:expand={optionsVisible}>
-    <div class="curr-value" on:click={toggleOptions}>{selected.label}</div>
+    <div class="curr-value" on:click={toggleOptions}>{$__(selected.label)}</div>
     {#if optionsVisible}
       <ul transition:drop>
         {#each options as { icon, label, value }}
@@ -62,7 +63,7 @@
             {#if icon}
               <i class="icon icon-{icon}" />
             {/if}
-            {label}
+            {$__(label)}
           </li>
         {/each}
       </ul>

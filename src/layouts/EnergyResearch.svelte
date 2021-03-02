@@ -10,6 +10,7 @@
   import { IVData, stateData, getValue } from '../stores';
   import { BATTERY_TYPES, COMMANDS } from '../constants';
   import { ipcRenderer } from 'electron';
+  import { __ } from '../utils/translations';
 
   const channels = [
     { arrowDir: 'both', num: 1, type: 'inout' },
@@ -46,7 +47,8 @@
     ipcRenderer.send('serialCommand', COMMANDS.setVoltage5(v));
   }
 
-  let fruitChannelOn, fithChannelOn = $stateData.onoff5;
+  let fruitChannelOn,
+    fithChannelOn = $stateData.onoff5;
 
   function toggleFruitChannel(e) {
     fruitChannelOn = e.target.checked;
@@ -55,14 +57,14 @@
 
 <CalibrationModal />
 <div class="layout">
-  <header>Исследование по преобразованию и коммутации энергии</header>
+  <header>{$__('study energy conversion')}</header>
 
   <main class="energy-research">
-    <div class="bus">Общая шина U, B = {$IVData.busVoltage}</div>
+    <div class="bus">{$__('common bus')} U, {$__('V')} = {$IVData.busVoltage}</div>
     {#each channels as { type, num }}
       <Arrow direction={type} style="grid-area: ar-1-{num}" />
       <div class="current" style="grid-area: i-{num}">
-        I, A = {$IVData['currentOut' + num]}
+        I, {$__('A')} = {$IVData['currentOut' + num]}
       </div>
       <Arrow direction={type} style="grid-area: ar-2-{num}" />
       <DcDc style="grid-area: dc-{num}" />
@@ -79,22 +81,22 @@
           name={num}
           checked={!!$stateData[`onoff${num}`]}
           disabled={!$stateData[`type${num}`]}
-          on="вкл"
-          off="выкл"
+          on={$__('on')}
+          off={$__('off')}
           on:change={toggleChannel}
           style="grid-area: sw-{num}" />
         <Switch
           checked={!!$stateData['inout' + num]}
           disabled={!$stateData[`type${num}`]}
           name={num}
-          on="заряд"
-          off="разряд"
+          on={$__('charge')}
+          off={$__('discharge')}
           on:change={toggleChannelMode}
           style="grid-area: sw-2-{num}" />
       {:else if type == 'input'}
         <div class="input-iv" style="grid-area: iv-{num}">
-          <div>U, B = {$IVData['voltage' + num]}</div>
-          <div>I, A = {$IVData['currentIn' + num]}</div>
+          <div>U, {$__('V')} = {$IVData['voltage' + num]}</div>
+          <div>I, {$__('A')} = {$IVData['currentIn' + num]}</div>
         </div>
         <div class="input-icons" style="grid-area: ico-{num}">
           <img
@@ -107,13 +109,13 @@
         <Switch
           name={num}
           checked={$stateData['onoff' + num]}
-          on="вкл"
-          off="выкл"
+          on={$__('on')}
+          off={$__('off')}
           on:change={toggleChannel}
           style="grid-area: sw-{num}" />
       {:else if type == 'output'}
         <div class="set-voltage" style="grid-area: v-{num}">
-          Задать напряжение
+          {$__('set voltage')}
           <RangeInput
             style="margin: 0 auto"
             type="naked"
@@ -122,9 +124,11 @@
             defaultValue={+initialIV.voltage5}
             onChange={setOutputVoltage} />
           <strong>I, A = {fithChannelOn ? $IVData.currentIn5 : '0.00'}</strong>
-          <strong>U, B = {fithChannelOn ? $IVData.voltage5 : '0.00'}</strong>
+          <strong>U, {$__('V')} = {fithChannelOn ? $IVData.voltage5 : '0.00'}</strong>
         </div>
-        <Arrow direction="output" style="grid-area: ico-5; align-self: start;" />
+        <Arrow
+          direction="output"
+          style="grid-area: ico-5; align-self: start;" />
         <img
           class="lamp"
           style="grid-area: ico-5"
@@ -132,15 +136,15 @@
           alt="lamp" />
         <Switch
           name={num}
-          on="вкл"
+          on={$__('on')}
           checked={$stateData['onoff' + num]}
-          off="выкл"
+          off={$__('off')}
           on:change={toggleChannel}
           style="grid-area: sw-{num}" />
       {/if}
     {/each}
     <div class="input-iv" style="grid-area: iv-6">
-      <div>U, мB = {fruitChannelOn ? $IVData.voltage7 : (0).toFixed(2)}</div>
+      <div>U, {$__('mV')} = {fruitChannelOn ? $IVData.voltage7 : (0).toFixed(2)}</div>
     </div>
     <Arrow direction="input" style="grid-area: ico-6" />
     <img
@@ -148,8 +152,12 @@
       alt="fruit"
       src="../app/icons/fruit.svg"
       style="grid-area: ico-6" />
-    <Switch on="вкл" off="выкл" style="grid-area:sw-6" on:change={toggleFruitChannel} />
-    <Button on:click={onBack} style="grid-area:back">Назад</Button>
+    <Switch
+      on={$__('on')}
+      off={$__('off')}
+      style="grid-area:sw-6"
+      on:change={toggleFruitChannel} />
+    <Button on:click={onBack} style="grid-area:back">{$__('back')}</Button>
   </main>
 </div>
 
@@ -168,10 +176,9 @@
       '. . ico-3 ico-4 ico-5 ico-6'
       'sw-1 sw-2 sw-3 sw-4 ico-5 sw-6'
       'sw-2-1 sw-2-2 . . sw-5 back';
-    grid-template-rows: 3.2rem 2.4rem 3.2rem 2.4rem 6.4rem 2.4rem repeat(3, 6.4rem) repeat(
-        2,
-        4rem
-      );
+    grid-template-rows:
+      3.2rem 2.4rem 3.2rem 2.4rem 6.4rem 2.4rem repeat(3, 6.4rem)
+      repeat(2, 4rem);
     justify-items: center;
     align-items: start;
     margin-top: 0;

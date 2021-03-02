@@ -1,35 +1,40 @@
 <script>
   import Button from '../atoms/Button';
-  export let disabled;
+  export let logId;
   export let style;
+  import { __ } from '../utils/translations';
   import { ipcRenderer } from 'electron';
   import { fly } from 'svelte/transition';
 
-  ipcRenderer.send('usbStatusRequest');
+  let isSaving,
+    isSaveFailed,
+    saveMessage,
+    isActive = true,
+    usbConnected;
 
-  let isSaving, isSaveFailed, saveMessage, isActive;
+  ipcRenderer.send('usbStorageRequest');
 
   ipcRenderer
-    .on('usbConnected', () => (isActive = true))
+    .on('usbConnected', () => (usbConnected = true))
     .on('usbDisconnected', () => {
-      isActive = false;
+      usbConnected = false;
       saveMessage = '';
     });
 
   function handleClick() {
-    disabled = true;
+    isActive = false;
     isSaving = true;
-    ipcRenderer.send('saveFile');
-    ipcRenderer.on('fileSaved', handleSaved);
+    ipcRenderer.send('saveFile', logId);
+    ipcRenderer.on(logId + 'Saved', handleSaved);
   }
   function handleSaved(e, err) {
     if (err) {
-      saveMessage = 'Не удалось сохранить файл';
+      saveMessage = 'save failed';
       isSaveFailed = true;
     } else {
-      saveMessage = 'Файл успешно сохранен';
+      saveMessage = 'file saved';
     }
-    disabled = false;
+    isActive = true;
     isSaving = false;
   }
   function closePopup() {
@@ -37,29 +42,34 @@
     isSaveFailed = false;
   }
   function ejectUSB() {
-    ipcRenderer.send('ejectUSB');
+    ipcRenderer.send('ejectUSB', closePopup);
   }
+  ipcRenderer.on('usbDisconnected', closePopup);
 </script>
 
-<Button on:click={handleClick} disabled={disabled || !isActive} {style}>
+<Button
+  {style}
+  on:click={handleClick}
+  disabled={!logId || !isActive || !usbConnected}>
   {#if isSaving}
     <span class="spinner" />
-  {/if}
-  Сохранить данные на usb-устройство
+    {$__('saving file')}
+  {:else}{$__('save file')}{/if}
+
 </Button>
 {#if saveMessage}
   <div class="popup" transition:fly={{ y: -200 }}>
     <span on:click={closePopup} class="popup-close">x</span>
-    <p>{saveMessage}</p>
-    <Button on:click={ejectUSB} size="sm">извлечь</Button>
+    <p>{$__(saveMessage)}</p>
+    <Button on:click={ejectUSB} size="sm">{$__('eject')}</Button>
   </div>
 {/if}
 
 <style>
   .spinner {
     display: inline-block;
-    width: 2rem;
-    height: 2rem;
+    width: 1.8rem;
+    height: 1.8rem;
     border: 2px solid var(--bg-color);
     clip-path: polygon(0 0, 50% 0, 50% 50%, 100% 50%, 100% 100%, 0 100%);
     border-radius: 50%;
@@ -72,9 +82,10 @@
     width: 30rem;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     border-radius: 8px;
-    padding: 2.4rem;
+    padding: 1.6rem;
+    z-index: 9001;
     background-color: var(--bg-color);
-    z-index: 9999;
+    text-align: left;
   }
   .popup-close {
     position: absolute;
