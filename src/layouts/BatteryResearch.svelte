@@ -17,7 +17,7 @@
     chart = new Chart(
       document.getElementById('chart').getContext('2d'),
       configureChart(points, {
-        x: { label: 't, c' },
+        x: { label: 't, s' },
         y: {
           label: modeOptions[selectedMode > 1 ? 1 : 2].symbol,
           max:
