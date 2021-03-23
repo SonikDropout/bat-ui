@@ -249,7 +249,7 @@
       {#if selectedMode}
         <div class="label-inline">{modeOptions[selectedMode].symbol}</div>
         <RangeInput
-          step={0.1}
+          step={selectedMode > 1 ? 0.1 : 0.01}
           style="grid-column: 2 / 4"
           onChange={setIV}
           defaultValue={defaultLoad}

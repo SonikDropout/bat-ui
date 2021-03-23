@@ -68,7 +68,7 @@ const COMMANDS = {
   turnOn6: [64, 0],
   turnOff6: [68, 0],
   setMode6: (v) => [72, v],
-  setLoad6: (v) => [76, v * 10 | 0],
+  setLoad6: (v) => [76, v * 100 | 0],
   setOffMode: (v) => [80, v],
   setMinVoltage6: (v) => [84, 100 + v * 10 | 0],
   setMaxTime6: (v) => [88, v / 10 | 0],
@@ -98,11 +98,11 @@ const VOLTAGE_CONSTRAINTS = [
 
 const CURRENT_CONSTRAINTS = [
   [],
-  [0.1, 3],
-  [0.1, 3],
-  [0.1, 1.8],
-  [0.1, 1.8],
-  [0.1, 0.2],
+  [0.1, 1],
+  [0.1, 1],
+  [0.1, 0.35],
+  [0.1, 0.35],
+  [0.1, 0.25],
   [0.1, 1],
 ]
 
