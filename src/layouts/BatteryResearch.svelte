@@ -54,7 +54,6 @@
     chart,
     chargeCapacity = 0,
     energyCapacity = 0,
-    modeConstraint,
     monitorTimeout,
     batteryType = $stateData.type1,
     offModeConstraint = selectedConstraint
@@ -194,7 +193,7 @@
 
   function setIV(val) {
     defaultLoad = val;
-    ipcRenderer.send('serialCommand', COMMANDS.setLoad6(val));
+    ipcRenderer.send('serialCommand', COMMANDS[selectedMode == 1 ? 'setCurrent6' : 'setLoad6'](val));
   }
 
   function setOffMode(mode) {
