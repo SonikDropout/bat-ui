@@ -17,9 +17,9 @@
     chart = new Chart(
       document.getElementById('chart').getContext('2d'),
       configureChart(points, {
-        x: { label: 't, s' },
+        x: { label: $__('t, s') },
         y: {
-          label: modeOptions[selectedMode > 1 ? 1 : 2].symbol,
+          label: $__(modeOptions[selectedMode > 1 ? 1 : 2].symbol),
           max:
             CONSTRAINTS[selectedMode > 1 ? 'batCurrent' : 'batVoltage'][
               batteryType
@@ -61,7 +61,7 @@
       : CONSTRAINTS.offTime,
     elapsed;
 
-  stateData.subscribe(state => {
+  stateData.subscribe((state) => {
     if (state.rebooted == 154) {
       ipcRenderer.send('serialCommand', COMMANDS.setLoad6(defaultLoad));
       ipcRenderer.send(
@@ -121,7 +121,7 @@
 
   function startLogging() {
     const fileName = 'Battery';
-    const headers = ['Time, s', 'U, V', 'I, A'];
+    const headers = [$__('time, s'), $__('U, V'), $__('I, A')];
     ipcRenderer.send('startFileWrite', fileName, headers);
     saveDisabled = false;
   }
@@ -166,7 +166,7 @@
 
   function monitorStop() {
     unsubscribeStop();
-    unsubscribeStop = stateData.subscribe(state => {
+    unsubscribeStop = stateData.subscribe((state) => {
       if (!state.startStop6 && state.rebooted != 154) {
         stopDrawing();
         unsubscribeData();
@@ -193,7 +193,10 @@
 
   function setIV(val) {
     defaultLoad = val;
-    ipcRenderer.send('serialCommand', COMMANDS[selectedMode == 1 ? 'setCurrent6' : 'setLoad6'](val));
+    ipcRenderer.send(
+      'serialCommand',
+      COMMANDS[selectedMode == 1 ? 'setCurrent6' : 'setLoad6'](val)
+    );
   }
 
   function setOffMode(mode) {
@@ -234,7 +237,8 @@
   <main>
     <div class="label">{$__('battery type')}</div>
     <h3>
-      {@html BATTERY_TYPES[$stateData.type1] || $__('please connect to 7 channel')}
+      {@html BATTERY_TYPES[$stateData.type1] ||
+        $__('please connect to 7 channel')}
     </h3>
     <div class="label">{$__('study mode')}</div>
     <Select
@@ -243,16 +247,20 @@
       style="grid-column: 1/ 5"
       options={modeOptions}
       defaultValue={selectedMode}
-      onChange={selectMode} />
+      onChange={selectMode}
+    />
     {#if $stateData.type1}
       {#if selectedMode}
-        <div class="label-inline">{modeOptions[selectedMode].symbol}</div>
+        <div class="label-inline">{$__(modeOptions[selectedMode].symbol)}</div>
         <RangeInput
           step={selectedMode > 1 ? 0.1 : 0.01}
           style="grid-column: 2 / 4"
           onChange={setIV}
           defaultValue={defaultLoad}
-          range={CONSTRAINTS[selectedMode > 1 ? 'batVoltage' : 'batCurrent'][batteryType]} />
+          range={CONSTRAINTS[selectedMode > 1 ? 'batVoltage' : 'batCurrent'][
+            batteryType
+          ]}
+        />
       {:else}
         <div class="spacer-sm" />
       {/if}
@@ -263,33 +271,36 @@
         onChange={setOffMode}
         disabled={isDrawing}
         options={constraintOptions}
-        defaultValue={selectedConstraint} />
+        defaultValue={selectedConstraint}
+      />
       <div class="label-inline">
-        {constraintOptions[selectedConstraint].symbol}
+        {$__(constraintOptions[selectedConstraint].symbol)}
       </div>
       <RangeInput
         style="grid-column: 2 / 4"
         onChange={setConstraint}
         defaultValue={offLimit}
         step={selectedConstraint ? 10 : 0.1}
-        range={offModeConstraint} />
+        range={offModeConstraint}
+      />
     {:else}
       <div class="spacer" />
     {/if}
     <Button
       style="grid-column: 1 / 3; align-self: start"
       id="onoff"
-      on:click={toggleResearch}>
-      {isDrawing ? $__( 'stop' ) : $__( 'start' )}
+      on:click={toggleResearch}
+    >
+      {isDrawing ? $__('stop') : $__('start')}
     </Button>
     <h4>{$__('obtained characteristics')}</h4>
     <div class="char-label">U, {$__('V')}</div>
     <div class="char-value">{$IVData.voltage6}</div>
-    <div class="char-label second">Q, {$__('A*h') }</div>
+    <div class="char-label second">Q, {$__('A*h')}</div>
     <div class="char-value second">
       {chargeCapacity > 0.001 ? chargeCapacity.toPrecision(3) : 0}
     </div>
-    <div class="char-label">I, { $__('A') }</div>
+    <div class="char-label">I, {$__('A')}</div>
     <div class="char-value">{$IVData.current6}</div>
     <div class="char-label second">E, {$__('W*h')}</div>
     <div class="char-value second">
@@ -319,12 +330,14 @@
       on:click={onBack}
       disabled={isDrawing}
       style="grid-area: 11 / 5 / 13 / 7; align-self: end"
-      id="back">
+      id="back"
+    >
       {$__('back')}
     </Button>
     <SaveButton
       style="grid-area: 11 / 7 / 13 / 13; align-self: end"
-      disabled={saveDisabled} />
+      disabled={saveDisabled}
+    />
   </main>
 </div>
 
