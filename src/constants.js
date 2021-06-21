@@ -23,6 +23,7 @@ const IV_DATA = [
   'current6',
   'temp1',
   'temp2',
+  'temp7',
   'voltage7',
   'setLoad7',
 ].flat(2);
@@ -43,7 +44,8 @@ const STATE_DATA = [
   'onoff7',
   'timeLimit',
   'voltageLimit',
-  'rebooted'
+  'rebooted',
+  'type7'
 ];
 
 const DATA_BYTE_LENGTH =

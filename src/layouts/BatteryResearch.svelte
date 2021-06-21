@@ -55,7 +55,7 @@
     chargeCapacity = 0,
     energyCapacity = 0,
     monitorTimeout,
-    batteryType = $stateData.type1,
+    batteryType = $stateData.type7,
     offModeConstraint = selectedConstraint
       ? CONSTRAINTS.batVoltage[batteryType]
       : CONSTRAINTS.offTime,
@@ -82,15 +82,15 @@
     }
   });
 
-  $: if ($stateData.type1 !== batteryType) {
-    batteryType = $stateData.type1;
+  $: if ($stateData.type7 !== batteryType) {
+    batteryType = $stateData.type7;
     chargeCapacity = 0;
     energyCapacity = 0;
     if (!selectedConstraint)
       offModeConstraint = CONSTRAINTS.batVoltage[batteryType];
   }
 
-  $: startDisabled = !$stateData.type1 || !selectedMode.value;
+  $: startDisabled = !$stateData.type7 || !selectedMode.value;
 
   function toggleResearch() {
     if (isDrawing) {
@@ -314,7 +314,7 @@
         <span>
           T
           <sub>{$__('battery')}</sub>
-          = {$IVData.temp1}&deg;C
+          = {$IVData.temp7}&deg;C
         </span>
         <Toggle on:change={toggleFridge} />
         <span>
