@@ -238,19 +238,19 @@
   <main>
     <div class="label">{$__('battery type')}</div>
     <h3>
-      {@html BATTERY_TYPES[$stateData.type1] ||
+      {@html BATTERY_TYPES[batteryType] ||
         $__('please connect to 7 channel')}
     </h3>
     <div class="label">{$__('study mode')}</div>
     <Select
-      title={!$stateData.type1 ? $__('please connect the battery') : ''}
+      title={!batteryType ? $__('please connect the battery') : ''}
       disabled={isDrawing}
       style="grid-column: 1/ 5"
       options={modeOptions}
       defaultValue={selectedMode}
       onChange={selectMode}
     />
-    {#if $stateData.type1}
+    {#if batteryType}
       {#if selectedMode}
         <div class="label-inline">{$__(modeOptions[selectedMode].symbol)}</div>
         <RangeInput
