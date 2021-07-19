@@ -40,6 +40,7 @@ module.exports = function parse(buf) {
     else if (j == STATE_DATA.indexOf('voltageLimit')) result.state.push(buf[i++] / 10);
     else result.state.push(buf[i++]);
   }
+  checkSum = checkSum % Math.pow(2, 16);
   if (checkSum != buf.readUInt16BE(i)) {
     console.error(
       `Check sums don't match! Calculated: ${checkSum}, recieved: ${buf.readUInt16BE(
